@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "meta": {
+    "appName": "SnapSafari Web Game",
+    "created": "2026-10-16T11:01:28.585Z",
+    "description": "Persistent store for user profiles, photo gallery, match history, and conflict audit logs"
+  },
+  "users": {
+    "TestHunter": {
+      "name": "TestHunter",
+      "avatar": "🦊",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "snapsSuccessful": 0,
+      "fastestSnapMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-16T11:02:30.958Z",
+      "lastSeen": "2026-10-16T11:02:30.958Z"
+    },
+    "Alice": {
+      "name": "Alice",
+      "avatar": "🦁",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "snapsSuccessful": 0,
+      "fastestSnapMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-16T11:02:46.507Z",
+      "lastSeen": "2026-10-16T11:03:27.100Z"
+    },
+    "Bob": {
+      "name": "Bob",
+      "avatar": "🦊",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "snapsSuccessful": 0,
+      "fastestSnapMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-16T11:02:46.511Z",
+      "lastSeen": "2026-10-16T11:03:27.104Z"
+    }
+  },
+  "gallery": [
+    {
+      "id": "photo_init_1",
+      "targetId": "royal_flamingo",
+      "targetName": "Королевский Фламинго в Очках",
+      "targetSpecies": "royal_flamingo",
+      "photographer": "SafariMaster",
+      "score": 1250,
+      "accuracy": 96,
+      "timeToSnapMs": 1840,
+      "caption": "Подпись от Алисы: лучший снимок!",
+      "filter": "cyberpunk",
+      "sticker": "🔥",
+      "boardPosition": {
+        "x": 80,
+        "y": 80
+      },
+      "version": 5,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-16T10:01:28.587Z",
+      "updatedAt": "2026-10-16T11:03:27.105Z"
+    },
+    {
+      "id": "photo_init_2",
+      "targetId": "cyber_penguin",
+      "targetName": "Кибер-Пингвин с Джетпаком",
+      "targetSpecies": "cyber_penguin",
+      "photographer": "NeonSnap",
+      "score": 1100,
+      "accuracy": 92,
+      "timeToSnapMs": 2410,
+      "caption": "Летит над неоновыми ветками!",
+      "filter": "cyberpunk",
+      "sticker": "🚀",
+      "boardPosition": {
+        "x": 380,
+        "y": 120
+      },
+      "version": 1,
+      "lastModifiedBy": "NeonSnap",
+      "createdAt": "2026-10-16T10:31:28.587Z",
+      "updatedAt": "2026-10-16T10:31:28.587Z"
+    }
+  ],
+  "matchHistory": [],
+  "conflictAuditLog": [
+    {
+      "id": "conf_1792148607105_pg14",
+      "timestamp": "2026-10-16T11:03:27.105Z",
+      "targetType": "GALLERY_ITEM",
+      "targetId": "photo_init_1",
+      "expectedVersion": 3,
+      "resolvedVersion": 5,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "FIELD_LEVEL_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v3 -> v5: поля успешно объединены сервером.",
+      "conflictingFields": [
+        "sticker"
+      ],
+      "conflictDetails": [
+        {
+          "field": "sticker",
+          "originalByOther": "⭐",
+          "attemptedByIncoming": "🔥",
+          "otherEditor": "Alice"
+        }
+      ]
+    },
+    {
+      "id": "conf_1792148566512_lt4b",
+      "timestamp": "2026-10-16T11:02:46.512Z",
+      "targetType": "GALLERY_ITEM",
+      "targetId": "photo_init_1",
+      "expectedVersion": 1,
+      "resolvedVersion": 3,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "FIELD_LEVEL_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля успешно объединены сервером.",
+      "conflictingFields": [
+        "filter"
+      ],
+      "conflictDetails": [
+        {
+          "field": "filter",
+          "originalByOther": "vintage",
+          "attemptedByIncoming": "cyberpunk",
+          "otherEditor": "Alice"
+        }
+      ]
+    }
+  ]
+}

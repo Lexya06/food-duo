@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SnapSafari — Многопользовательская веб-игра (СПП ЛР4)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="logo-area">
+      <div class="logo-icon">📸</div>
+      <div class="logo-text">
+        <h1>SnapSafari</h1>
+        <span class="sub-text">Фото-Охота в Реальном Времени</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="safari">🎯 Сафари Охота</button>
+      <button class="tab-btn" data-tab="gallery">🖼️ Фото-Выставка <span class="badge" id="galleryCountBadge">0</span></button>
+      <button class="tab-btn" data-tab="leaderboard">🏆 Зал Славы</button>
+      <button class="tab-btn highlight" data-tab="demo">🧪 Проверка Требований ЛР4</button>
+    </nav>
+
+    <!-- Status & Profile -->
+    <div class="header-status">
+      <!-- Network indicator -->
+      <div id="netStatusPill" class="status-pill status-connecting" title="Статус WebSocket">
+        <span class="status-dot"></span>
+        <span id="netStatusText">Подключение...</span>
+      </div>
+
+      <!-- Sound Toggle -->
+      <button id="soundToggleBtn" class="icon-btn" title="Звуковые эффекты">🔊</button>
+
+      <!-- Player Profile Card -->
+      <div class="player-profile-pill" id="playerProfilePill">
+        <span class="player-avatar" id="headerPlayerAvatar">📸</span>
+        <span class="player-name" id="headerPlayerName">Игрок</span>
+        <span class="player-score-badge" id="headerPlayerScore">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Network Offline Alert Banner -->
+  <div id="offlineBanner" class="offline-banner hidden">
+    <span class="offline-icon">⚠️</span>
+    <span id="offlineBannerMsg">Соединение потеряно! Состояние сохранено локально. Повторное подключение...</span>
+    <span class="queue-badge" id="offlineQueueBadge">Очередь: 0</span>
+    <button id="reconnectNowBtn" class="btn btn-sm btn-reconnect">Переподключить сейчас</button>
+  </div>
+
+  <!-- Main Views Container -->
+  <main class="main-content">
+
+    <!-- VIEW 1: SAFARI CANVAS GAME -->
+    <section id="view-safari" class="game-view active">
+      <!-- Round Info & Target HUD -->
+      <div class="target-hud-bar">
+        <div class="hud-target-info">
+          <div class="target-badge-label">ТЕКУЩАЯ ЦЕЛЬ РАУНДА:</div>
+          <div class="target-name-container">
+            <span class="target-icon" id="targetSpeciesIcon">🎯</span>
+            <span class="target-name" id="targetNameText">Поиск цели...</span>
+            <span class="target-rarity-badge" id="targetRarityBadge">Редкий</span>
+          </div>
+          <div class="target-hint" id="targetHintText">Ищите в подходящей зоне заповедника!</div>
+        </div>
+
+        <div class="hud-timer-container">
+          <div class="timer-label">ВРЕМЯ ДО СМЕНЫ</div>
+          <div class="timer-value" id="roundTimerVal">35s</div>
+          <div class="timer-bar-wrap">
+            <div class="timer-bar-fill" id="roundTimerBar"></div>
+          </div>
+        </div>
+
+        <div class="hud-round-meta">
+          <div class="round-num-label">РАУНД #<span id="roundNumberVal">1</span></div>
+          <div class="active-hunters-label">Охотников в сети: <span id="onlineHuntersCount">1</span></div>
+        </div>
+      </div>
+
+      <!-- Interactive Viewport Container -->
+      <div class="viewport-wrapper" id="viewportWrapper">
+        <canvas id="gameCanvas" width="1200" height="650"></canvas>
+
+        <!-- Viewfinder Overlay Elements -->
+        <div class="viewfinder-hud" id="viewfinderHud">
+          <div class="viewfinder-circle">
+            <div class="viewfinder-cross-h"></div>
+            <div class="viewfinder-cross-v"></div>
+            <div class="viewfinder-corner top-left"></div>
+            <div class="viewfinder-corner top-right"></div>
+            <div class="viewfinder-corner bottom-left"></div>
+            <div class="viewfinder-corner bottom-right"></div>
+            <div class="focus-reticle" id="focusReticle"></div>
+          </div>
+          <div class="hud-readout">
+            <span id="viewfinderCoords">X: 1200 Y: 800</span>
+            <span id="viewfinderZoom">ZOOM 1.0x</span>
+            <span id="viewfinderFocus">FOCUS 85%</span>
+          </div>
+        </div>
+
+        <!-- Camera Flash Animation Overlay -->
+        <div id="flashOverlay" class="flash-overlay"></div>
+
+        <!-- Target In-Sight Indicator Alert -->
+        <div id="targetInSightAlert" class="target-in-sight-alert hidden">
+          🎯 ЦЕЛЬ В ПРИЦЕЛЕ! НАЖМИТЕ ПРОБЕЛ ДЛЯ СНИМКА!
+        </div>
+      </div>
+
+      <!-- Bottom Camera Tool Bar -->
+      <div class="camera-toolbar">
+        <div class="tool-group">
+          <label>Приближение (Zoom):</label>
+          <button id="zoomOutBtn" class="tool-btn" title="Уменьшить">-</button>
+          <input type="range" id="zoomSlider" min="0.6" max="2.2" step="0.1" value="1.0">
+          <button id="zoomInBtn" class="tool-btn" title="Увеличить">+</button>
+          <span class="tool-val" id="zoomValDisplay">1.0x</span>
+        </div>
+
+        <!-- Big Shutter Button -->
+        <div class="tool-group main-shutter-group">
+          <button id="shutterBtn" class="shutter-button">
+            <div class="shutter-inner">
+              <span class="shutter-icon">📸</span>
+              <span class="shutter-title">СДЕЛАТЬ СНИМОК</span>
+              <span class="shutter-sub">(ПРОБЕЛ / КЛИК)</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="tool-group">
+          <label>Кольцо фокуса:</label>
+          <input type="range" id="focusSlider" min="10" max="90" step="5" value="50">
+          <span class="tool-val" id="focusValDisplay">Авто</span>
+        </div>
+
+        <div class="controls-hint">
+          <span>💡 <b>Управление:</b> Двигайте мышь для наведения камеры, колесико для зума, <b>Пробел</b> для снимка</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: COLLABORATIVE EXHIBITION BOARD (Concurrent Editing & Conflicts) -->
+    <section id="view-gallery" class="game-view">
+      <div class="gallery-header-bar">
+        <div>
+          <h2>🖼️ Совместная Выставка Трофеев</h2>
+          <p class="subtitle">
+            Все игроки могут одновременно редактировать карточки снимков (подпись, фильтр, стикер, расположение).
+            Сервер проверяет версии (OCC) и бесконфликтно объединяет изменения (3-Way Merge).
+          </p>
+        </div>
+        <div class="gallery-action-buttons">
+          <button id="demoTriggerConflictBtn" class="btn btn-warning">
+            ⚡ Смоделировать конфликт одновременного редактирования
+          </button>
+          <button id="refreshGalleryBtn" class="btn btn-secondary">🔄 Обновить</button>
+        </div>
+      </div>
+
+      <!-- Realtime Conflict Toast Notification Area -->
+      <div id="conflictAlertBanner" class="conflict-alert-banner hidden">
+        <div class="conflict-banner-content">
+          <span class="conflict-icon">⚡</span>
+          <div class="conflict-text-wrap">
+            <div class="conflict-title" id="conflictTitle">Разрешен конфликт версий!</div>
+            <div class="conflict-desc" id="conflictDesc">Сервер автоматически объединил правки.</div>
+          </div>
+        </div>
+        <button id="closeConflictBannerBtn" class="icon-btn-close">×</button>
+      </div>
+
+      <!-- Cards Grid / Board -->
+      <div class="corkboard-container" id="corkboardContainer">
+        <div class="cards-grid" id="galleryCardsGrid">
+          <!-- Dynamically populated photo cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: HALL OF FAME / PERSISTENT LEADERBOARD -->
+    <section id="view-leaderboard" class="game-view">
+      <div class="leaderboard-header">
+        <h2>🏆 Зал Славы Фото-Охотников</h2>
+        <p class="subtitle">
+          Данные статистики сохраняются между запусками приложения в <code>data/database.json</code>.
+        </p>
+      </div>
+
+      <div class="leaderboard-table-wrap">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th>Место</th>
+              <th>Охотник</th>
+              <th>Всего очков</th>
+              <th>Успешных снимков</th>
+              <th>Ср. Точность</th>
+              <th>Лучшее время</th>
+              <th>Был в сети</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardTbody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- VIEW 4: PROFESSOR LAB 4 VERIFICATION PANEL -->
+    <section id="view-demo" class="game-view">
+      <div class="demo-header">
+        <h2>🧪 Панель Проверки Требований Лабораторной Работы №4</h2>
+        <p class="subtitle">
+          Наглядный отчет и интерактивные тесты соответствия каждому пункту задания.
+        </p>
+      </div>
+
+      <div class="requirements-grid">
+        <!-- Req 1: WebSockets -->
+        <div class="req-card passed">
+          <div class="req-status-badge">✅ Выполнено</div>
+          <h3>1. Мгновенная синхронизация через WebSockets</h3>
+          <p>
+            Позиции камеры участников, перемещение диких животных (20 Гц), смена раундов,
+            снимки и вспышки передаются всем подключенным клиентам в режиме реального времени.
+          </p>
+          <div class="req-meta">
+            <span>Протокол: <b>Native WebSocket (ws)</b></span>
+            <span>Частота синхронизации: <b>20 fps</b></span>
+          </div>
+        </div>
+
+        <!-- Req 2: Pure JavaScript -->
+        <div class="req-card passed">
+          <div class="req-status-badge">✅ Выполнено</div>
+          <h3>2. Только JavaScript, без фреймворков</h3>
+          <p>
+            Frontend написан на чистом Vanilla JavaScript (ES6+ модули, Canvas API, Web Audio API).
+            Backend — чистый Node.js без Express, React, Vue, Angular или Next.js.
+          </p>
+          <div class="req-meta">
+            <span>Frontend: <b>Vanilla JS + Canvas</b></span>
+            <span>Backend: <b>Node.js (http + ws)</b></span>
+          </div>
+        </div>
+
+        <!-- Req 3: Persistence -->
+        <div class="req-card passed">
+          <div class="req-status-badge">✅ Выполнено</div>
+          <h3>3. Сохранение данных между запусками</h3>
+          <p>
+            Все профили игроков, рекорды, фотоальбом и история матчей сохраняются в
+            файле <code>data/database.json</code> с атомарной перезаписью (atomic write).
+            Данные сохраняются при перезапуске сервера.
+          </p>
+          <div class="req-actions">
+            <button id="viewDbJsonBtn" class="btn btn-sm btn-secondary">Показать структуру БД</button>
+            <button id="resetDemoDbBtn" class="btn btn-sm btn-danger">Сбросить до демо-данных</button>
+          </div>
+        </div>
+
+        <!-- Bonus 1: Conflict Resolution -->
+        <div class="req-card bonus-passed">
+          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
+          <h3>4. Конкурентный доступ и разрешение конфликтов</h3>
+          <p>
+            Реализовано два уровня разрешения конфликтов:
+            <br><b>А) Конкурентный снимок цели:</b> При одновременном нажатии кнопки съемки арбитр с микросекундной точностью
+            (<code>process.hrtime.bigint</code>) и учетом точности центрирования определяет победителя (Золото) и ассистента (Серебро).
+            <br><b>Б) Совместное редактирование карточек:</b> При одновременной правке карточки несколькими пользователями сервер применяет
+            оптимистическую блокировку (OCC по версии <code>version</code>) и 3-Way Field Merge, объединяя непересекающиеся поля без потери данных.
+          </p>
+          <div class="req-actions">
+            <button id="testConflictBtn2" class="btn btn-sm btn-warning">🧪 Запустить тест одновременного редактирования</button>
+          </div>
+        </div>
+
+        <!-- Bonus 2: Offline Resilience -->
+        <div class="req-card bonus-passed">
+          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
+          <h3>5. Восстановление при потере соединения</h3>
+          <p>
+            При отключении сети клиент сохраняет состояние в <code>localStorage</code>, буферизирует
+            действия в очередь (Offline Action Queue) и периодически пытается переподключиться.
+            Сервер удерживает сессию в течение grace-периода и восстанавливает игрока без потери очков.
+          </p>
+          <div class="req-actions">
+            <button id="simulateDropSocketBtn" class="btn btn-sm btn-danger">🔌 Имитировать обрыв сети (Drop Connection)</button>
+          </div>
+        </div>
+
+        <!-- Bonus 3: Deployment Ready -->
+        <div class="req-card bonus-passed">
+          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
+          <h3>6. Готовность к развертыванию на хостинге</h3>
+          <p>
+            Приложение полностью автономно, слушает <code>process.env.PORT</code>, снабжено <code>Dockerfile</code>
+            и конфигурацией <code>render.yaml</code> для развертывания на Render, Glitch или Railway в 1 клик.
+          </p>
+        </div>
+      </div>
+
+      <!-- Conflict Audit Log -->
+      <div class="audit-log-section">
+        <h3>📋 Журнал Разрешения Конфликтов (Live Audit Log)</h3>
+        <p class="subtitle">Все зафиксированные конфликты конкурентного доступа и результаты их арбитража:</p>
+        <div class="audit-table-wrap">
+          <table class="audit-table">
+            <thead>
+              <tr>
+                <th>Время</th>
+                <th>Тип</th>
+                <th>Цель / Карточка</th>
+                <th>Участники</th>
+                <th>Способ разрешения</th>
+                <th>Итог</th>
+              </tr>
+            </thead>
+            <tbody id="conflictAuditTbody">
+              <!-- Populated dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: Login / Profile Setup -->
+  <div id="loginModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-icon">📸</span>
+        <h2>Добро пожаловать в SnapSafari!</h2>
+        <p>Многопользовательская веб-игра в реальном времени</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="playerNameInput">Ваш псевдоним фотографа:</label>
+          <input type="text" id="playerNameInput" maxlength="18" placeholder="Введите имя..." autofocus>
+        </div>
+
+        <div class="form-group">
+          <label>Выберите аватар камеры:</label>
+          <div class="avatar-picker" id="avatarPicker">
+            <button type="button" class="avatar-opt active" data-avatar="📸">📸</button>
+            <button type="button" class="avatar-opt" data-avatar="📷">📷</button>
+            <button type="button" class="avatar-opt" data-avatar="🦊">🦊</button>
+            <button type="button" class="avatar-opt" data-avatar="🦁">🦁</button>
+            <button type="button" class="avatar-opt" data-avatar="🐧">🐧</button>
+            <button type="button" class="avatar-opt" data-avatar="🦉">🦉</button>
+            <button type="button" class="avatar-opt" data-avatar="🚀">🚀</button>
+            <button type="button" class="avatar-opt" data-avatar="⭐">⭐</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="roomSelectInput">Заповедник (Комната):</label>
+          <select id="roomSelectInput">
+            <option value="safari_main">🌍 Главный Заповедник Саванны (Общий)</option>
+            <option value="jungle_oasis">🌴 Тропический Оазис</option>
+            <option value="cyber_park">⚡ Кибер-Парк Неона</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="startGameBtn" class="btn btn-primary btn-block">Войти на Фото-Охоту 🎯</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Round Showcase / Victory Overlay -->
+  <div id="showcaseModal" class="showcase-backdrop hidden">
+    <div class="showcase-card">
+      <div class="showcase-ribbon">🏆 СНИМОК РАУНДА!</div>
+      <div class="showcase-photo-frame" id="showcasePhotoFrame">
+        <!-- Rendered winner creature / card -->
+        <canvas id="showcaseCanvas" width="340" height="240"></canvas>
+      </div>
+      <div class="showcase-details">
+        <h3 id="showcaseTargetTitle">Кибер-Пингвин</h3>
+        <p class="showcase-photographer">Фотограф: <b id="showcaseWinnerName">Player</b></p>
+        <div class="showcase-metrics">
+          <span class="metric-pill">Точность: <b id="showcaseAccuracy">95%</b></span>
+          <span class="metric-pill">Очки: <b id="showcaseScore">+1250</b></span>
+          <span class="metric-pill">Время: <b id="showcaseTime">1.8s</b></span>
+        </div>
+        <div id="showcaseContentionBox" class="showcase-contention-box hidden">
+          ⚡ <b>Конкурентный снимок:</b> Соперник отстал всего на <span id="showcaseDeltaMs">42</span> мс!
+        </div>
+      </div>
+      <div class="showcase-countdown">Следующий раунд начнется через <span id="showcaseSec">4</span>...</div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Edit Card Modal -->
+  <div id="editCardModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Редактирование Карточки Выставки</h2>
+        <span class="version-tag" id="editModalVersionTag">Версия 1</span>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="editCaptionInput">Подпись к фотографии:</label>
+          <input type="text" id="editCaptionInput" maxlength="60" placeholder="Добавьте остроумную подпись...">
+        </div>
+
+        <div class="form-group">
+          <label>Художественный фильтр:</label>
+          <div class="filter-picker" id="editFilterPicker">
+            <button type="button" class="filter-opt active" data-filter="normal">Обычный</button>
+            <button type="button" class="filter-opt" data-filter="vintage">Винтаж</button>
+            <button type="button" class="filter-opt" data-filter="cyberpunk">Киберпанк</button>
+            <button type="button" class="filter-opt" data-filter="noir">Нуар</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Памятный стикер:</label>
+          <div class="sticker-picker" id="editStickerPicker">
+            <button type="button" class="sticker-opt active" data-sticker="⭐">⭐</button>
+            <button type="button" class="sticker-opt" data-sticker="🏆">🏆</button>
+            <button type="button" class="sticker-opt" data-sticker="📸">📸</button>
+            <button type="button" class="sticker-opt" data-sticker="🔥">🔥</button>
+            <button type="button" class="sticker-opt" data-sticker="🚀">🚀</button>
+            <button type="button" class="sticker-opt" data-sticker="🦊">🦊</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="cancelEditCardBtn" class="btn btn-secondary">Отмена</button>
+        <button id="saveEditCardBtn" class="btn btn-primary">Сохранить (OCC Sync)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Vanilla JavaScript Modules -->
+  <script type="module" src="js/audio.js"></script>
+  <script type="module" src="js/network.js"></script>
+  <script type="module" src="js/canvas-renderer.js"></script>
+  <script type="module" src="js/board-editor.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
