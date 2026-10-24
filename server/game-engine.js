@@ -1,5 +1,5 @@
 import { conflictResolver } from './conflict-resolver.js';
-import { persistence, DEFAULT_AVATAR, normalizeAvatarPath } from './persistence.js';
+import { persistence, DEFAULT_AVATAR, normalizeAvatarPath, isTestPlayerName, isTestRoom } from './persistence.js';
 import { sessionStore } from './session-store.js';
 
 // Load Complementary Food Pairs dynamically from database (data/database.json)
@@ -331,6 +331,7 @@ export class GameRoom {
   ensurePlayerGameCounted(player) {
     if (!player || !player.name) return;
     if (player.lastCountedRound === this.roundNumber) return;
+    if (!isTestRoom(this.roomId) && isTestPlayerName(player.name)) return;
 
     player.lastCountedRound = this.roundNumber;
     const user = persistence.getOrCreateUser(player.name, player.avatar);
@@ -666,6 +667,43 @@ export class GameRoom {
   removePlayer(socketId) {
     const p = this.players.get(socketId);
     if (p) {
+      const isTest = isTestRoom(this.roomId);
+      const isGenericOrTest = isTestPlayerName(p.name);
+
+      if (!isTest && isGenericOrTest) {
+        this.players.delete(socketId);
+        this.singleFlipTimers.delete(socketId);
+        this.playerPendingFlips.delete(socketId);
+        this.restartVotes.delete(socketId);
+
+        const unFlippedIndices = [];
+        for (const card of this.cards) {
+          if (!card.isMatched && card.flippedBy === socketId) {
+            card.isFlipped = false;
+            card.flippedBy = null;
+            unFlippedIndices.push(card.index);
+          }
+        }
+        if (unFlippedIndices.length > 0 && this.onCardsUnflipped) {
+          this.onCardsUnflipped(this.roomId, unFlippedIndices);
+        }
+
+        const onlinePlayers = [...this.players.values()].filter(x => x.isOnline !== false);
+        if (this.roundState === 'ACTIVE') {
+          const offlinePlayers = [...this.players.values()].filter(x => x.isOnline === false || x.isAway);
+          if (offlinePlayers.length > 0) {
+            const missingNames = offlinePlayers.map(x => x.name).join(', ');
+            this.setPaused(true, `Связь с игроком «${missingNames}» прервана. Игра приостановлена. Ожидание переподключения...`);
+          } else {
+            this.setPaused(false, null);
+          }
+        }
+
+        this.saveStateToPersistence();
+        console.log(`[GameRoom ${this.roomId}] Removed guest player ${p.name}. Online remaining: ${onlinePlayers.length}`);
+        return p;
+      }
+
       p.isOnline = false;
       p.disconnectedAt = Date.now();
 
@@ -1114,7 +1152,9 @@ export class GameRoom {
   }
 
   getRoomLeaderboard() {
+    const isTest = isTestRoom(this.roomId);
     return [...this.players.values()]
+      .filter(p => isTest || (p.name && !isTestPlayerName(p.name)))
       .map(p => ({
         playerId: p.playerId,
         socketId: p.socketId,

@@ -1,7 +1,7 @@
 import { gameManager } from './game-engine.js';
 import { sessionStore } from './session-store.js';
 import { conflictResolver } from './conflict-resolver.js';
-import { persistence, DEFAULT_AVATAR, normalizeAvatarPath } from './persistence.js';
+import { persistence, DEFAULT_AVATAR, normalizeAvatarPath, isTestPlayerName, isTestRoom } from './persistence.js';
 
 export function setupWebSocketServer(wss) {
   // Map: socket -> meta { socketId, sessionToken, roomId, playerName, isAlive }
@@ -258,7 +258,9 @@ export function setupWebSocketServer(wss) {
           comboStreak: player.comboStreak,
           roundDiscoveredRecipes: player.roundDiscoveredRecipes
         });
-        persistence.getOrCreateUser(player.name, player.avatar);
+        if (authUser || isTestPlayerName(player.name) || isTestRoom(roomId)) {
+          persistence.getOrCreateUser(player.name, player.avatar);
+        }
 
         // Send full init state to newly connected client
         ws.send(JSON.stringify({
@@ -381,7 +383,9 @@ export function setupWebSocketServer(wss) {
           comboStreak: player.comboStreak,
           roundDiscoveredRecipes: player.roundDiscoveredRecipes
         });
-        persistence.getOrCreateUser(player.name, player.avatar);
+        if (authUser || isTestPlayerName(player.name) || isTestRoom(roomId)) {
+          persistence.getOrCreateUser(player.name, player.avatar);
+        }
 
         // Replay any queued offline actions if applicable
         const replayedResults = [];
@@ -953,10 +957,12 @@ export function setupWebSocketServer(wss) {
           }
         }
 
-        persistence.getOrCreateUser(cleanName, cleanAvatar);
-        persistence.updateUserAvatar(cleanName, cleanAvatar);
-        if (meta.userId) {
-          persistence.updateUserAvatar(meta.userId, cleanAvatar);
+        if (meta.userId || isTestPlayerName(cleanName) || isTestRoom(meta.roomId)) {
+          persistence.getOrCreateUser(cleanName, cleanAvatar);
+          persistence.updateUserAvatar(cleanName, cleanAvatar);
+          if (meta.userId) {
+            persistence.updateUserAvatar(meta.userId, cleanAvatar);
+          }
         }
 
         const room = gameManager.getRoom(meta.roomId);

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { persistence, DEFAULT_AVATAR, normalizeAvatarPath } from './persistence.js';
+import { persistence, DEFAULT_AVATAR, normalizeAvatarPath, isTestPlayerName } from './persistence.js';
 
 export class SessionStore {
   constructor(gracePeriodMs = 86400000) { // 24 hours default grace period
@@ -46,6 +46,7 @@ export class SessionStore {
   findSessionByPlayerName(playerName, roomId = null) {
     if (!playerName) return null;
     const lower = playerName.trim().toLowerCase();
+    if (lower === 'шеф-повар' || isTestPlayerName(playerName)) return null;
     for (const s of this.sessions.values()) {
       if ((!roomId || s.roomId === roomId) && s.playerName && s.playerName.trim().toLowerCase() === lower && s.isOnline === false) {
         return s;

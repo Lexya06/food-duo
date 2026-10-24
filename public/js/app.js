@@ -1807,10 +1807,12 @@ class AppController {
     if (!name) return false;
     const n = String(name).trim().toLowerCase();
     if (/^(тест|test)/i.test(n)) return true;
-    if (/^шеф\s*([0-9]+|[аб])$/i.test(n)) return true;
-    if (/^шеф-повар\s*\([0-9]+\)$/i.test(n)) return true;
-    if (/^супер-шеф$/i.test(n)) return true;
+    if (/^(шеф|chef)/i.test(n)) return true;
+    if (/^шеф-повар/i.test(n)) return true;
+    if (/^(супер-шеф|super-chef)/i.test(n)) return true;
     if (/^(alice|bob)$/i.test(n)) return true;
+    if (/^(гость|guest|игрок|player)/i.test(n)) return true;
+    if (/^(гурман|су-шеф)/i.test(n)) return true;
     return false;
   }
 
@@ -1820,12 +1822,9 @@ class AppController {
 
     const visiblePlayers = Array.isArray(playersList)
       ? playersList.filter(p => {
-          const isMe = (this.player.id && p.playerId === this.player.id) ||
-                       (this.player.socketId && p.socketId === this.player.socketId) ||
-                       (network.sessionToken && p.sessionToken === network.sessionToken) ||
-                       ((p.name || '').trim().toLowerCase() === (this.player.name || '').trim().toLowerCase());
-          if (isMe) return true;
-          return !p.name || !this.isTestPlayerName(p.name);
+          if (!p || !p.name) return false;
+          if (this.isTestPlayerName(p.name)) return false;
+          return true;
         })
       : [];
 

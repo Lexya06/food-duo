@@ -70,10 +70,12 @@ export function isTestPlayerName(name) {
   if (!name) return false;
   const n = String(name).trim().toLowerCase();
   if (/^(тест|test)/i.test(n)) return true;
-  if (/^шеф\s*([0-9]+|[аб])$/i.test(n)) return true;
-  if (/^шеф-повар\s*\([0-9]+\)$/i.test(n)) return true;
-  if (/^супер-шеф$/i.test(n)) return true;
+  if (/^(шеф|chef)/i.test(n)) return true;
+  if (/^шеф-повар/i.test(n)) return true;
+  if (/^(супер-шеф|super-chef)/i.test(n)) return true;
   if (/^(alice|bob)$/i.test(n)) return true;
+  if (/^(гость|guest|игрок|player)/i.test(n)) return true;
+  if (/^(гурман|су-шеф)/i.test(n)) return true;
   return false;
 }
 
@@ -328,8 +330,9 @@ class PersistenceService {
           delete this.data.users['Гурман'];
           delete this.data.users['Су-Шеф'];
           delete this.data.users['Шеф-Повар'];
+          delete this.data.users['Lexyak'];
           for (const key of Object.keys(this.data.users)) {
-            if (isTestPlayerName(key)) {
+            if (isTestPlayerName(key) || key.toLowerCase() === 'lexyak') {
               this.testData.users[key] = this.data.users[key];
               delete this.data.users[key];
               this.isDirty = true;
@@ -351,9 +354,14 @@ class PersistenceService {
           }
         }
         if (this.data.sessions) {
-          for (const s of Object.values(this.data.sessions)) {
-            if (s && typeof s === 'object' && s.avatar) {
-              s.avatar = normalizeAvatarPath(s.avatar);
+          for (const [token, s] of Object.entries(this.data.sessions)) {
+            if (s && typeof s === 'object') {
+              if (s.playerName && (isTestPlayerName(s.playerName) || s.playerName.toLowerCase() === 'lexyak')) {
+                delete this.data.sessions[token];
+                this.isDirty = true;
+              } else if (s.avatar) {
+                s.avatar = normalizeAvatarPath(s.avatar);
+              }
             }
           }
         }
@@ -361,6 +369,9 @@ class PersistenceService {
         // Clean up stale abandoned active room timer and table players if no cards were ever matched
         if (this.data.activeRooms && this.data.activeRooms.bistro_main) {
           const bistro = this.data.activeRooms.bistro_main;
+          if (Array.isArray(bistro.players)) {
+            bistro.players = bistro.players.filter(p => p && p.name && !isTestPlayerName(p.name) && p.name.toLowerCase() !== 'lexyak');
+          }
           const matchedCards = (bistro.cards || []).filter(c => c && c.isMatched).length;
           if (matchedCards === 0) {
             bistro.players = [];
@@ -381,6 +392,9 @@ class PersistenceService {
               });
             }
           }
+        }
+        if (this.isDirty) {
+          this.flushSync();
         }
         console.log(`[Persistence] Loaded database from ${this.dbFile} (${this.data.foodPairs.length} pairs, ${Object.keys(this.data.users).length} users, ${this.data.unlockedRecipes.length} achievements, ${Object.keys(this.data.activeRooms).length} active rooms, ${Object.keys(this.data.sessions).length} sessions)`);
       } else {
@@ -865,11 +879,15 @@ class PersistenceService {
             if (!p.alreadyCounted) {
               user.gamesPlayed = (user.gamesPlayed || 0) + 1;
             }
+            if (isTestPlayerName(p.player)) {
+              this.scheduleTestSave();
+            } else {
+              this.scheduleSave();
+            }
           }
         }
       }
     }
-    this.scheduleSave();
   }
 
   getMatchHistory(limit = 20) {
@@ -959,16 +977,18 @@ class PersistenceService {
       ? Object.values(this.data.users).concat(Object.values(this.testData.users))
       : Object.values(this.data.users);
 
-    const list = users.map(u => ({
-      name: u.name,
-      avatar: normalizeAvatarPath(u.avatar),
-      totalScore: u.totalScore || 0,
-      gamesPlayed: u.gamesPlayed || 0,
-      pairsMatched: u.pairsMatched || 0,
-      avgAccuracy: u.avgAccuracy || 90,
-      fastestMatchMs: u.fastestMatchMs,
-      lastSeen: u.lastSeen
-    }));
+    const list = users
+      .filter(u => u && u.name && (includeTest || !isTestPlayerName(u.name)))
+      .map(u => ({
+        name: u.name,
+        avatar: normalizeAvatarPath(u.avatar),
+        totalScore: u.totalScore || 0,
+        gamesPlayed: u.gamesPlayed || 0,
+        pairsMatched: u.pairsMatched || 0,
+        avgAccuracy: u.avgAccuracy || 90,
+        fastestMatchMs: u.fastestMatchMs,
+        lastSeen: u.lastSeen
+      }));
 
     list.sort((a, b) => b.totalScore - a.totalScore);
     return list.slice(0, limit);

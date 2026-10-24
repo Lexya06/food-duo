@@ -294,12 +294,12 @@
       "roomId": "bistro_main",
       "roomName": "Главный Зал Ресторана",
       "roundNumber": 6,
-      "roundState": "ACTIVE",
-      "elapsedSeconds": 33,
-      "roundStartedAt": 1792825356328,
-      "isPaused": true,
-      "pauseReason": "Игрок «Lexya» свернул окно или переключил вкладку. Время игры приостановлено.",
-      "pausedAt": 1792825395013,
+      "roundState": "IDLE",
+      "elapsedSeconds": 0,
+      "roundStartedAt": null,
+      "isPaused": false,
+      "pauseReason": null,
+      "pausedAt": null,
       "lastWinnerInfo": null,
       "previousRoundWinner": {
         "roundNumber": 4,
@@ -320,29 +320,7 @@
         ],
         "message": "🎉 Отлично! Все пары найдены за 54 сек! Победитель: Lexya"
       },
-      "players": [
-        {
-          "playerId": "plr_d3983a6d",
-          "sessionToken": "ses_497fb5f9c50f4c2d9310280555364152",
-          "name": "Lexya",
-          "avatar": "/avatars/pizza.svg",
-          "color": "#ff4757",
-          "score": 8500,
-          "roundScore": 0,
-          "roundPairs": 0,
-          "comboStreak": 0,
-          "roundDiscoveredRecipes": [],
-          "cursor": {
-            "x": 4.1,
-            "y": 8.8
-          },
-          "isOnline": true,
-          "isAway": true,
-          "lastCountedRound": 4,
-          "disconnectedAt": null,
-          "joinedAt": 1792825264550
-        }
-      ],
+      "players": [],
       "cards": [
         {
           "index": 0,
@@ -632,9 +610,9 @@
       "roundPairs": 0,
       "comboStreak": 0,
       "roundDiscoveredRecipes": [],
-      "isOnline": true,
+      "isOnline": false,
       "lastActive": 1792825395014,
-      "disconnectedAt": null
+      "disconnectedAt": 1792827945650
     }
   },
   "authTokens": {
