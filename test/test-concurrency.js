@@ -1,15 +1,21 @@
+import './setup-test-env.js';
 import http from 'node:http';
 import { WebSocketServer, WebSocket } from 'ws';
 import { setupWebSocketServer } from '../server/ws-handler.js';
 import { persistence } from '../server/persistence.js';
 import { conflictResolver } from '../server/conflict-resolver.js';
+import { gameManager } from '../server/game-engine.js';
 
 async function runTests() {
   console.log('🧪 ==========================================');
-  console.log('🧪  SnapSafari Automated Concurrency & Sync Tests');
+  console.log('🧪  Food Duo — Automated Concurrency & Sync Tests');
   console.log('🧪 ==========================================\n');
 
-  // Start test server on random port
+  // Reset test room state
+  persistence.clearRoomState('test_bistro');
+  if (gameManager?.rooms) gameManager.rooms.delete('test_bistro');
+
+  // Start ephemeral test server on random port
   const server = http.createServer();
   const wss = new WebSocketServer({ server });
   setupWebSocketServer(wss);
@@ -28,78 +34,82 @@ async function runTests() {
 
     ws1.send(JSON.stringify({
       type: 'JOIN_ROOM',
-      payload: { playerName: 'Alice', avatar: '🦁', roomId: 'test_room' }
+      payload: { playerName: 'Alice', avatar: '👩‍🍳', roomId: 'test_bistro' }
     }));
 
     const init1 = await new Promise(r => ws1.once('message', data => r(JSON.parse(data.toString()))));
     if (init1.type !== 'INIT_STATE') throw new Error('Expected INIT_STATE message');
     console.log('✅ Client 1 received INIT_STATE. SessionToken:', init1.payload.sessionToken);
-    console.log('✅ Initial gallery cards:', init1.payload.gallery.length);
+    console.log('✅ Total cards in room:', init1.payload.room.cards.length);
+    console.log('✅ Initial recipes in book:', init1.payload.recipeBook.length);
 
-    // TEST 2: Concurrent Edits & Optimistic Concurrency Control (OCC) 3-Way Merge
-    console.log('\n--- TEST 2: Concurrent Access & 3-Way Merge Conflict Resolution ---');
+    // TEST 2: Concurrent Card Flip Collision Arbitration (Microsecond Arbiter)
+    console.log('\n--- TEST 2: Concurrent Card Selection Collision Arbitration ---');
     const ws2 = new WebSocket(wsUrl);
     await new Promise(r => ws2.on('open', r));
 
     ws2.send(JSON.stringify({
       type: 'JOIN_ROOM',
-      payload: { playerName: 'Bob', avatar: '🦊', roomId: 'test_room' }
+      payload: { playerName: 'Bob', avatar: '👨‍🍳', roomId: 'test_bistro' }
     }));
 
     const init2 = await new Promise(r => ws2.once('message', data => r(JSON.parse(data.toString()))));
     console.log('✅ Client 2 connected.');
 
-    const targetCard = init1.payload.gallery[0];
-    const baseVersion = targetCard.version;
-    console.log(`Target card ID: "${targetCard.id}", base version: v${baseVersion}`);
+    const cardFlipEvents = [];
+    ws1.on('message', d => cardFlipEvents.push(JSON.parse(d.toString())));
+    ws2.on('message', d => cardFlipEvents.push(JSON.parse(d.toString())));
 
-    // Alice modifies caption, Bob concurrently modifies filter and sticker
-    const cardMessages = [];
-    ws1.on('message', d => cardMessages.push(JSON.parse(d.toString())));
-    ws2.on('message', d => cardMessages.push(JSON.parse(d.toString())));
-
-    console.log('⚡ Sending concurrent conflicting edits from Alice and Bob...');
+    console.log('⚡ Sending concurrent flip clicks from Alice and Bob for card #2...');
     ws1.send(JSON.stringify({
-      type: 'UPDATE_BOARD_CARD',
-      payload: {
-        id: targetCard.id,
-        expectedVersion: baseVersion,
-        changes: { caption: 'Подпись от Алисы: лучший снимок!' }
-      }
+      type: 'FLIP_CARD',
+      payload: { cardIndex: 2 }
     }));
-
     ws2.send(JSON.stringify({
-      type: 'UPDATE_BOARD_CARD',
-      payload: {
-        id: targetCard.id,
-        expectedVersion: baseVersion, // Contention! Bob has not yet seen Alice's version!
-        changes: { filter: 'cyberpunk', sticker: '🔥' }
-      }
+      type: 'FLIP_CARD',
+      payload: { cardIndex: 2 }
     }));
 
-    // Wait for resolution
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 350));
 
-    const conflictEvent = cardMessages.find(m => m.type === 'BOARD_CONFLICT_RESOLVED');
-    if (!conflictEvent) {
-      throw new Error('Expected BOARD_CONFLICT_RESOLVED event on concurrent edit!');
+    const cardFlippedMsg = cardFlipEvents.find(m => m.type === 'CARD_FLIPPED');
+    if (!cardFlippedMsg) {
+      throw new Error('Expected CARD_FLIPPED event for successful flip!');
+    }
+    console.log(`✅ Card flip granted to fastest client: ${cardFlippedMsg.payload.playerName}`);
+
+    // TEST 3: Simultaneous Card Selection Collision Arbitration & Audit Logging
+    console.log('\n--- TEST 3: Simultaneous Card Selection Collision Arbitration & Audit Logging ---');
+    const auditMessages = [];
+    ws1.on('message', d => auditMessages.push(JSON.parse(d.toString())));
+    ws2.on('message', d => auditMessages.push(JSON.parse(d.toString())));
+
+    console.log('⚡ Triggering concurrent card race test (DEMO_RACE_COLLISION on card #3)...');
+    ws1.send(JSON.stringify({
+      type: 'DEMO_RACE_COLLISION',
+      payload: { cardIndex: 3 }
+    }));
+
+    await new Promise(r => setTimeout(r, 350));
+
+    const collisionEvent = auditMessages.find(m => m.type === 'CARD_COLLISION_RESOLVED');
+    if (!collisionEvent) {
+      throw new Error('Expected CARD_COLLISION_RESOLVED event on concurrent card selection!');
     }
 
-    console.log('✅ Conflict detected and resolved by server!');
-    console.log(`   Resolution Message: "${conflictEvent.payload.resolutionMessage}"`);
-    console.log(`   New Version: v${conflictEvent.payload.item.version}`);
-    console.log(`   Merged Caption: "${conflictEvent.payload.item.caption}"`);
-    console.log(`   Merged Filter: "${conflictEvent.payload.item.filter}"`);
-    console.log(`   Merged Sticker: "${conflictEvent.payload.item.sticker}"`);
+    console.log('✅ Card click collision detected and arbitrated by server!');
+    console.log(`   Winner: ${collisionEvent.payload.winner}`);
+    console.log(`   Time Delta: ${collisionEvent.payload.timeDeltaMs} ms`);
+    console.log(`   Resolution Message: "${collisionEvent.payload.message}"`);
 
-    if (conflictEvent.payload.item.caption !== 'Подпись от Алисы: лучший снимок!' ||
-        conflictEvent.payload.item.filter !== 'cyberpunk') {
-      throw new Error('Non-conflicting fields failed to merge properly!');
+    const latestAudit = persistence.getConflictAuditLog(1)[0];
+    if (!latestAudit || latestAudit.targetType !== 'CARD_FLIP_RACE') {
+      throw new Error('Conflict event was not recorded in persistence conflict audit log!');
     }
-    console.log('✅ 3-Way Merge preserved both Alice and Bob changes without data loss!');
+    console.log(`✅ Conflict logged in audit trail: [${latestAudit.targetType}] ${latestAudit.resolutionMessage}`);
 
-    // TEST 3: Network Disconnection, Session Token & State Recovery
-    console.log('\n--- TEST 3: Connection Loss & Session Resumption ---');
+    // TEST 4: Network Disconnection, Session Token & State Recovery
+    console.log('\n--- TEST 4: Connection Loss & Session Resumption ---');
     console.log('Simulating connection drop for Alice (closing ws1)...');
     ws1.close();
     await new Promise(r => setTimeout(r, 200));
@@ -123,27 +133,40 @@ async function runTests() {
     console.log('✅ Alice session successfully resumed! Player ID:', resumeMsg.payload.player.playerId);
     console.log('✅ Room state and player presence synchronized.');
 
-    // TEST 4: Persistence Verification
-    console.log('\n--- TEST 4: Persistence Storage Verification ---');
+    // TEST 5: Persistence Storage Verification
+    console.log('\n--- TEST 5: Persistence Storage Verification ---');
+    // Record a score match and round
+    persistence.recordPairMatch('Alice', 150, 1200);
     persistence.flushSync();
-    const loadedCards = persistence.getGallery();
-    const updatedInDb = loadedCards.find(c => c.id === targetCard.id);
-    if (!updatedInDb || updatedInDb.version < 3) {
-      throw new Error('Data persistence check failed in data/database.json!');
+
+    const dbUser = persistence.getOrCreateUser('Alice');
+    if (!dbUser || dbUser.totalScore < 150) {
+      throw new Error('User score was not persisted properly!');
     }
-    console.log(`✅ Verified: Card updated in persistence file data/database.json to version v${updatedInDb.version}`);
+    console.log(`✅ Verified: User Alice stats persisted in data/database.json (Score: ${dbUser.totalScore}, Pairs: ${dbUser.pairsMatched})`);
+
+    const auditTrail = persistence.getConflictAuditLog();
+    if (auditTrail.length === 0) {
+      throw new Error('Audit trail empty in persistence file!');
+    }
+    console.log(`✅ Verified: Conflict audit trail persisted in data/database.json (${auditTrail.length} entries)`);
 
     ws1Reconnected.close();
     ws2.close();
+
     console.log('\n🎉 ==========================================');
-    console.log('🎉  ALL 4 TEST SUITES PASSED SUCCESSFULLY! (10/10)');
+    console.log('🎉  ALL 5 TEST SUITES PASSED SUCCESSFULLY! (10/10)');
     console.log('🎉 ==========================================\n');
-    server.close();
     process.exit(0);
   } catch (err) {
     console.error('\n❌ TEST FAILED:', err);
-    server.close();
     process.exit(1);
+  } finally {
+    try { persistence.deleteUser('Alice'); } catch (e) {}
+    try { persistence.deleteUser('Bob'); } catch (e) {}
+    try { persistence.clearRoomState('test_bistro'); } catch (e) {}
+    try { persistence.flushSync(); } catch (e) {}
+    try { server.close(); } catch (e) {}
   }
 }
 

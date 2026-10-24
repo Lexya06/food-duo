@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="bg_cf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f472b6"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <clipPath id="clip_cf">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+  </defs>
+  <circle cx="50" cy="50" r="50" fill="url(#bg_cf)"/>
+  <g clip-path="url(#clip_cf)" transform="translate(50, 52) scale(1.18) translate(-50, -50)">
+    <!-- Hair back -->
+    <path d="M 28 50 C 24 64 26 78 35 84 C 36 76 34 66 36 58 Z" fill="#78350f"/>
+    <path d="M 72 50 C 76 64 74 78 65 84 C 64 76 66 66 64 58 Z" fill="#78350f"/>
+    <!-- Body -->
+    <path d="M 27 88 C 27 72 36 68 50 68 C 64 68 73 72 73 88 Z" fill="#ffffff"/>
+    <!-- Head -->
+    <circle cx="50" cy="52" r="17" fill="#fed7aa"/>
+    <!-- Hair front bangs -->
+    <path d="M 33 46 C 35 37 42 34 50 34 C 58 34 65 37 67 46 C 60 40 52 40 50 43 C 48 40 40 40 33 46 Z" fill="#92400e"/>
+    <!-- Blush -->
+    <circle cx="40" cy="56" r="3" fill="#fca5a5" opacity="0.6"/>
+    <circle cx="60" cy="56" r="3" fill="#fca5a5" opacity="0.6"/>
+    <!-- Eyes -->
+    <circle cx="43" cy="51" r="2.2" fill="#1e293b"/>
+    <circle cx="57" cy="51" r="2.2" fill="#1e293b"/>
+    <!-- Eyelashes -->
+    <path d="M 40 48 L 42 50" stroke="#1e293b" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M 60 48 L 58 50" stroke="#1e293b" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Smile -->
+    <path d="M 46 58 Q 50 62 54 58" stroke="#be185d" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Scarf necktie -->
+    <path d="M 44 68 Q 50 72 56 68 L 54 78 Q 50 82 46 78 Z" fill="#fb7185"/>
+    <!-- Chef Toque Hat -->
+    <ellipse cx="50" cy="35" rx="14" ry="4" fill="#f1f5f9"/>
+    <path d="M 36 35 C 36 35 34 21 40 17 C 45 14 55 14 60 17 C 66 21 64 35 64 35 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+    <circle cx="42" cy="18" r="7" fill="#ffffff"/>
+    <circle cx="50" cy="15" r="8" fill="#ffffff"/>
+    <circle cx="58" cy="18" r="7" fill="#ffffff"/>
+    <rect x="37" y="31" width="26" height="5" rx="2" fill="#e2e8f0"/>
+  </g>
+</svg>

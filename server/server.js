@@ -96,7 +96,9 @@ function serveFile(filePath, ext, res) {
     }
     res.writeHead(200, {
       'Content-Type': contentType,
-      'Cache-Control': 'no-cache'
+      'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0'
     });
     res.end(content);
   });
@@ -104,11 +106,24 @@ function serveFile(filePath, ext, res) {
 
 // WebSocket Server attached to pure HTTP server
 const wss = new WebSocketServer({ server });
+wss.on('error', (err) => {
+  // Ignored here if server error already caught below
+});
 setupWebSocketServer(wss);
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ ОШИБКА: Порт ${PORT} уже занят другим процессом (например, Docker-контейнером или старым процессом node)!`);
+    console.error(`Освободите порт ${PORT} или запустите на другом порту, например: PORT=3001 npm start\n`);
+    process.exit(1);
+  } else {
+    console.error('[Server Error]', err);
+  }
+});
 
 server.listen(PORT, HOST, () => {
   console.log(`\n======================================================`);
-  console.log(`📸  SNAP SAFARI - Multi-Player Real-Time Web Game  📸`);
+  console.log(`🍴  FOOD DUO — НАЙДИ ПАРУ: ЕДА (СПП ЛР4)  🍕`);
   console.log(`======================================================`);
   console.log(`Server running at:  http://localhost:${PORT}`);
   console.log(`Network address:    http://${HOST}:${PORT}`);
@@ -119,9 +134,18 @@ server.listen(PORT, HOST, () => {
   console.log(`======================================================\n`);
 });
 
+import { gameManager } from './game-engine.js';
+
 // Graceful shutdown handling
 function gracefulExit() {
   console.log('\n[Server] Flushing persistent storage before exit...');
+  try {
+    for (const room of gameManager.rooms.values()) {
+      room.saveStateToPersistence();
+    }
+  } catch (e) {
+    console.error('[Server] Error saving room states during exit:', e);
+  }
   persistence.flushSync();
   wss.close(() => {
     server.close(() => {

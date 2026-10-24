@@ -1,109 +1,1458 @@
 {
-  "version": 1,
+  "version": 3,
   "meta": {
-    "appName": "SnapSafari Web Game",
-    "created": "2026-10-16T11:01:28.585Z",
-    "description": "Persistent store for user profiles, photo gallery, match history, and conflict audit logs"
+    "appName": "Food Duo — Найди Пару: Еда (СПП ЛР4)",
+    "created": "2026-10-16T12:00:00.000Z",
+    "description": "Персистентное хранилище: каталог пар еды, открытые рецепты (достижения), игроки и журнал аудита конфликтов"
   },
-  "users": {
-    "TestHunter": {
-      "name": "TestHunter",
-      "avatar": "🦊",
-      "totalScore": 0,
-      "gamesPlayed": 0,
-      "snapsSuccessful": 0,
-      "fastestSnapMs": null,
-      "accuracySum": 0,
-      "avgAccuracy": 0,
-      "createdAt": "2026-10-16T11:02:30.958Z",
-      "lastSeen": "2026-10-16T11:02:30.958Z"
-    },
-    "Alice": {
-      "name": "Alice",
-      "avatar": "🦁",
-      "totalScore": 0,
-      "gamesPlayed": 0,
-      "snapsSuccessful": 0,
-      "fastestSnapMs": null,
-      "accuracySum": 0,
-      "avgAccuracy": 0,
-      "createdAt": "2026-10-16T11:02:46.507Z",
-      "lastSeen": "2026-10-16T11:03:27.100Z"
-    },
-    "Bob": {
-      "name": "Bob",
-      "avatar": "🦊",
-      "totalScore": 0,
-      "gamesPlayed": 0,
-      "snapsSuccessful": 0,
-      "fastestSnapMs": null,
-      "accuracySum": 0,
-      "avgAccuracy": 0,
-      "createdAt": "2026-10-16T11:02:46.511Z",
-      "lastSeen": "2026-10-16T11:03:27.104Z"
-    }
-  },
-  "gallery": [
+  "foodPairs": [
     {
-      "id": "photo_init_1",
-      "targetId": "royal_flamingo",
-      "targetName": "Королевский Фламинго в Очках",
-      "targetSpecies": "royal_flamingo",
-      "photographer": "SafariMaster",
-      "score": 1250,
-      "accuracy": 96,
-      "timeToSnapMs": 1840,
-      "caption": "Подпись от Алисы: лучший снимок!",
-      "filter": "cyberpunk",
-      "sticker": "🔥",
-      "boardPosition": {
-        "x": 80,
-        "y": 80
+      "pairId": "pair_burger_fries",
+      "title": "Бургер + Картошка Фри",
+      "cardA": {
+        "foodId": "burger",
+        "name": "Бургер",
+        "emoji": "🍔",
+        "partnerName": "Картофель Фри",
+        "color": "#ff7043"
       },
-      "version": 5,
-      "lastModifiedBy": "Bob+Alice",
-      "createdAt": "2026-10-16T10:01:28.587Z",
-      "updatedAt": "2026-10-16T11:03:27.105Z"
+      "cardB": {
+        "foodId": "fries",
+        "name": "Картофель Фри",
+        "emoji": "🍟",
+        "partnerName": "Бургер",
+        "color": "#ffb300"
+      }
     },
     {
-      "id": "photo_init_2",
-      "targetId": "cyber_penguin",
-      "targetName": "Кибер-Пингвин с Джетпаком",
-      "targetSpecies": "cyber_penguin",
-      "photographer": "NeonSnap",
-      "score": 1100,
-      "accuracy": 92,
-      "timeToSnapMs": 2410,
-      "caption": "Летит над неоновыми ветками!",
-      "filter": "cyberpunk",
-      "sticker": "🚀",
-      "boardPosition": {
-        "x": 380,
-        "y": 120
+      "pairId": "pair_pizza_soda",
+      "title": "Пицца + Газировка",
+      "cardA": {
+        "foodId": "pizza",
+        "name": "Пицца",
+        "emoji": "🍕",
+        "partnerName": "Газировка",
+        "color": "#e53935"
       },
-      "version": 1,
-      "lastModifiedBy": "NeonSnap",
-      "createdAt": "2026-10-16T10:31:28.587Z",
-      "updatedAt": "2026-10-16T10:31:28.587Z"
+      "cardB": {
+        "foodId": "soda",
+        "name": "Газировка",
+        "emoji": "🥤",
+        "partnerName": "Пицца",
+        "color": "#d81b60"
+      }
+    },
+    {
+      "pairId": "pair_coffee_donut",
+      "title": "Кофе + Пончик",
+      "cardA": {
+        "foodId": "coffee",
+        "name": "Кофе",
+        "emoji": "☕",
+        "partnerName": "Пончик",
+        "color": "#6d4c41"
+      },
+      "cardB": {
+        "foodId": "donut",
+        "name": "Пончик",
+        "emoji": "🍩",
+        "partnerName": "Кофе",
+        "color": "#ec407a"
+      }
+    },
+    {
+      "pairId": "pair_pancakes_honey",
+      "title": "Блины + Мед",
+      "cardA": {
+        "foodId": "pancakes",
+        "name": "Блинчики",
+        "emoji": "🥞",
+        "partnerName": "Мед",
+        "color": "#fbc02d"
+      },
+      "cardB": {
+        "foodId": "honey",
+        "name": "Мед",
+        "emoji": "🍯",
+        "partnerName": "Блинчики",
+        "color": "#ffa000"
+      }
+    },
+    {
+      "pairId": "pair_sushi_chopsticks",
+      "title": "Суши + Палочки",
+      "cardA": {
+        "foodId": "sushi",
+        "name": "Суши",
+        "emoji": "🍣",
+        "partnerName": "Палочки и соус",
+        "color": "#fb8c00"
+      },
+      "cardB": {
+        "foodId": "chopsticks",
+        "name": "Палочки и соус",
+        "emoji": "🥢",
+        "partnerName": "Суши",
+        "color": "#8e24aa"
+      }
+    },
+    {
+      "pairId": "pair_pasta_cheese",
+      "title": "Спагетти + Сыр",
+      "cardA": {
+        "foodId": "pasta",
+        "name": "Спагетти",
+        "emoji": "🍝",
+        "partnerName": "Сыр Пармезан",
+        "color": "#e64a19"
+      },
+      "cardB": {
+        "foodId": "cheese",
+        "name": "Сыр Пармезан",
+        "emoji": "🧀",
+        "partnerName": "Спагетти",
+        "color": "#fbc02d"
+      }
+    },
+    {
+      "pairId": "pair_sandwich_juice",
+      "title": "Сэндвич + Сок",
+      "cardA": {
+        "foodId": "sandwich",
+        "name": "Сэндвич",
+        "emoji": "🥪",
+        "partnerName": "Свежий сок",
+        "color": "#7cb342"
+      },
+      "cardB": {
+        "foodId": "juice",
+        "name": "Свежий сок",
+        "emoji": "🧃",
+        "partnerName": "Сэндвич",
+        "color": "#00acc1"
+      }
+    },
+    {
+      "pairId": "pair_icecream_strawberry",
+      "title": "Мороженое + Клубника",
+      "cardA": {
+        "foodId": "icecream",
+        "name": "Мороженое",
+        "emoji": "🍦",
+        "partnerName": "Клубника",
+        "color": "#ab47bc"
+      },
+      "cardB": {
+        "foodId": "strawberry",
+        "name": "Клубника",
+        "emoji": "🍓",
+        "partnerName": "Мороженое",
+        "color": "#e91e63"
+      }
+    },
+    {
+      "pairId": "pair_dumplings_sourcream",
+      "title": "Пельмени + Сметана",
+      "cardA": {
+        "foodId": "dumplings",
+        "name": "Пельмени",
+        "emoji": "🥟",
+        "partnerName": "Сметана",
+        "color": "#78909c"
+      },
+      "cardB": {
+        "foodId": "sourcream",
+        "name": "Сметана",
+        "emoji": "🍶",
+        "partnerName": "Пельмени",
+        "color": "#90a4ae"
+      }
+    },
+    {
+      "pairId": "pair_taco_burrito",
+      "title": "Тако + Буррито",
+      "cardA": {
+        "foodId": "taco",
+        "name": "Тако",
+        "emoji": "🌮",
+        "partnerName": "Буррито",
+        "color": "#f57c00"
+      },
+      "cardB": {
+        "foodId": "burrito",
+        "name": "Буррито",
+        "emoji": "🌯",
+        "partnerName": "Тако",
+        "color": "#e65100"
+      }
+    },
+    {
+      "pairId": "pair_croissant_chocolate",
+      "title": "Круассан + Шоколад",
+      "cardA": {
+        "foodId": "croissant",
+        "name": "Круассан",
+        "emoji": "🥐",
+        "partnerName": "Шоколад",
+        "color": "#ffb74d"
+      },
+      "cardB": {
+        "foodId": "chocolate",
+        "name": "Шоколад",
+        "emoji": "🍫",
+        "partnerName": "Круассан",
+        "color": "#5d4037"
+      }
+    },
+    {
+      "pairId": "pair_ramen_egg",
+      "title": "Рамен + Яйцо",
+      "cardA": {
+        "foodId": "ramen",
+        "name": "Рамен",
+        "emoji": "🍜",
+        "partnerName": "Яйцо",
+        "color": "#bcaaa4"
+      },
+      "cardB": {
+        "foodId": "egg",
+        "name": "Яйцо",
+        "emoji": "🥚",
+        "partnerName": "Рамен",
+        "color": "#ffe082"
+      }
+    },
+    {
+      "pairId": "pair_tea_cookie",
+      "title": "Чай + Печенье",
+      "cardA": {
+        "foodId": "tea",
+        "name": "Зеленый Чай",
+        "emoji": "🍵",
+        "partnerName": "Печенье",
+        "color": "#26a69a"
+      },
+      "cardB": {
+        "foodId": "cookie",
+        "name": "Печенье",
+        "emoji": "🍪",
+        "partnerName": "Зеленый Чай",
+        "color": "#8d6e63"
+      }
+    },
+    {
+      "pairId": "pair_popcorn_cocktail",
+      "title": "Попкорн + Коктейль",
+      "cardA": {
+        "foodId": "popcorn",
+        "name": "Попкорн",
+        "emoji": "🍿",
+        "partnerName": "Коктейль",
+        "color": "#ffd54f"
+      },
+      "cardB": {
+        "foodId": "cocktail",
+        "name": "Коктейль",
+        "emoji": "🍹",
+        "partnerName": "Попкорн",
+        "color": "#29b6f6"
+      }
     }
   ],
-  "matchHistory": [],
+  "users": {
+    "Lexya": {
+      "id": "usr_47a61dd463eb",
+      "name": "Lexya",
+      "username": "lexya",
+      "avatar": "/avatars/pizza.svg",
+      "passwordHash": "35a9ed79ec27d3946ff3912278b24e45a927921a32ae0c2ae3aa3d7136634d6ac5c524b6e5ab5215158bd6c4d9b706991ad62919f31002ee374ef359dfd8e207",
+      "salt": "c13a4189ec306bb0cfa9e6e92772718b",
+      "totalScore": 8500,
+      "gamesPlayed": 16,
+      "pairsMatched": 67,
+      "fastestMatchMs": 624,
+      "createdAt": "2026-10-20T14:18:22.642Z",
+      "lastSeen": "2026-10-24T07:02:13.610Z"
+    },
+    "Kostya": {
+      "id": "usr_a03df768ab0e",
+      "name": "Kostya",
+      "username": "kostya",
+      "avatar": "/avatars/chef_male.svg",
+      "passwordHash": "1a2b0c686ad20849a5683903bb35f85a84cfe5eb97dd368c554afde4c172372267ec15df5eb767269bbac82e574d41cb0fef0e6a62a542cda039c647467d9533",
+      "salt": "62bf6521ffb6c32b1de4c8d2022989f1",
+      "totalScore": 1550,
+      "gamesPlayed": 5,
+      "pairsMatched": 15,
+      "fastestMatchMs": 643,
+      "createdAt": "2026-10-20T14:19:15.122Z",
+      "lastSeen": "2026-10-22T18:01:21.348Z"
+    }
+  },
+  "activeRooms": {
+    "bistro_main": {
+      "roomId": "bistro_main",
+      "roomName": "Главный Зал Ресторана",
+      "roundNumber": 6,
+      "roundState": "ACTIVE",
+      "elapsedSeconds": 33,
+      "roundStartedAt": 1792825356328,
+      "isPaused": true,
+      "pauseReason": "Игрок «Lexya» свернул окно или переключил вкладку. Время игры приостановлено.",
+      "pausedAt": 1792825395013,
+      "lastWinnerInfo": null,
+      "previousRoundWinner": {
+        "roundNumber": 4,
+        "winnerName": "Lexya",
+        "winnerAvatar": "/avatars/pizza.svg",
+        "winnerScore": 1050,
+        "winnerPairs": 8,
+        "elapsedSeconds": 54,
+        "totalPairs": 8,
+        "scores": [
+          {
+            "player": "Lexya",
+            "avatar": "/avatars/pizza.svg",
+            "score": 8500,
+            "roundScore": 1050,
+            "roundPairs": 8
+          }
+        ],
+        "message": "🎉 Отлично! Все пары найдены за 54 сек! Победитель: Lexya"
+      },
+      "players": [
+        {
+          "playerId": "plr_d3983a6d",
+          "sessionToken": "ses_497fb5f9c50f4c2d9310280555364152",
+          "name": "Lexya",
+          "avatar": "/avatars/pizza.svg",
+          "color": "#ff4757",
+          "score": 8500,
+          "roundScore": 0,
+          "roundPairs": 0,
+          "comboStreak": 0,
+          "roundDiscoveredRecipes": [],
+          "cursor": {
+            "x": 4.1,
+            "y": 8.8
+          },
+          "isOnline": true,
+          "isAway": true,
+          "lastCountedRound": 4,
+          "disconnectedAt": null,
+          "joinedAt": 1792825264550
+        }
+      ],
+      "cards": [
+        {
+          "index": 0,
+          "cardId": "card_6_0",
+          "pairId": "pair_pizza_soda",
+          "pairTitle": "Пицца + Газировка",
+          "foodId": "pizza",
+          "name": "Пицца",
+          "emoji": "🍕",
+          "partnerName": "Газировка",
+          "color": "#e53935",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 1,
+          "cardId": "card_6_1",
+          "pairId": "pair_croissant_chocolate",
+          "pairTitle": "Круассан + Шоколад",
+          "foodId": "croissant",
+          "name": "Круассан",
+          "emoji": "🥐",
+          "partnerName": "Шоколад",
+          "color": "#ffb74d",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 2,
+          "cardId": "card_6_2",
+          "pairId": "pair_sandwich_juice",
+          "pairTitle": "Сэндвич + Сок",
+          "foodId": "juice",
+          "name": "Свежий сок",
+          "emoji": "🧃",
+          "partnerName": "Сэндвич",
+          "color": "#00acc1",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 3,
+          "cardId": "card_6_3",
+          "pairId": "pair_dumplings_sourcream",
+          "pairTitle": "Пельмени + Сметана",
+          "foodId": "dumplings",
+          "name": "Пельмени",
+          "emoji": "🥟",
+          "partnerName": "Сметана",
+          "color": "#78909c",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 4,
+          "cardId": "card_6_4",
+          "pairId": "pair_sandwich_juice",
+          "pairTitle": "Сэндвич + Сок",
+          "foodId": "sandwich",
+          "name": "Сэндвич",
+          "emoji": "🥪",
+          "partnerName": "Свежий сок",
+          "color": "#7cb342",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 5,
+          "cardId": "card_6_5",
+          "pairId": "pair_pancakes_honey",
+          "pairTitle": "Блины + Мед",
+          "foodId": "pancakes",
+          "name": "Блинчики",
+          "emoji": "🥞",
+          "partnerName": "Мед",
+          "color": "#fbc02d",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 6,
+          "cardId": "card_6_6",
+          "pairId": "pair_coffee_donut",
+          "pairTitle": "Кофе + Пончик",
+          "foodId": "coffee",
+          "name": "Кофе",
+          "emoji": "☕",
+          "partnerName": "Пончик",
+          "color": "#6d4c41",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 7,
+          "cardId": "card_6_7",
+          "pairId": "pair_burger_fries",
+          "pairTitle": "Бургер + Картошка Фри",
+          "foodId": "burger",
+          "name": "Бургер",
+          "emoji": "🍔",
+          "partnerName": "Картофель Фри",
+          "color": "#ff7043",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 8,
+          "cardId": "card_6_8",
+          "pairId": "pair_dumplings_sourcream",
+          "pairTitle": "Пельмени + Сметана",
+          "foodId": "sourcream",
+          "name": "Сметана",
+          "emoji": "🍶",
+          "partnerName": "Пельмени",
+          "color": "#90a4ae",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 9,
+          "cardId": "card_6_9",
+          "pairId": "pair_coffee_donut",
+          "pairTitle": "Кофе + Пончик",
+          "foodId": "donut",
+          "name": "Пончик",
+          "emoji": "🍩",
+          "partnerName": "Кофе",
+          "color": "#ec407a",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 10,
+          "cardId": "card_6_10",
+          "pairId": "pair_pizza_soda",
+          "pairTitle": "Пицца + Газировка",
+          "foodId": "soda",
+          "name": "Газировка",
+          "emoji": "🥤",
+          "partnerName": "Пицца",
+          "color": "#d81b60",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 11,
+          "cardId": "card_6_11",
+          "pairId": "pair_croissant_chocolate",
+          "pairTitle": "Круассан + Шоколад",
+          "foodId": "chocolate",
+          "name": "Шоколад",
+          "emoji": "🍫",
+          "partnerName": "Круассан",
+          "color": "#5d4037",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 12,
+          "cardId": "card_6_12",
+          "pairId": "pair_pancakes_honey",
+          "pairTitle": "Блины + Мед",
+          "foodId": "honey",
+          "name": "Мед",
+          "emoji": "🍯",
+          "partnerName": "Блинчики",
+          "color": "#ffa000",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 13,
+          "cardId": "card_6_13",
+          "pairId": "pair_popcorn_cocktail",
+          "pairTitle": "Попкорн + Коктейль",
+          "foodId": "cocktail",
+          "name": "Коктейль",
+          "emoji": "🍹",
+          "partnerName": "Попкорн",
+          "color": "#29b6f6",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 14,
+          "cardId": "card_6_14",
+          "pairId": "pair_popcorn_cocktail",
+          "pairTitle": "Попкорн + Коктейль",
+          "foodId": "popcorn",
+          "name": "Попкорн",
+          "emoji": "🍿",
+          "partnerName": "Коктейль",
+          "color": "#ffd54f",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        },
+        {
+          "index": 15,
+          "cardId": "card_6_15",
+          "pairId": "pair_burger_fries",
+          "pairTitle": "Бургер + Картошка Фри",
+          "foodId": "fries",
+          "name": "Картофель Фри",
+          "emoji": "🍟",
+          "partnerName": "Бургер",
+          "color": "#ffb300",
+          "isFlipped": false,
+          "isMatched": false,
+          "flippedBy": null,
+          "matchedBy": null,
+          "matchedByName": null,
+          "matchedByColor": null
+        }
+      ],
+      "savedAt": "2026-10-24T07:03:15.014Z"
+    }
+  },
+  "sessions": {
+    "ses_497fb5f9c50f4c2d9310280555364152": {
+      "token": "ses_497fb5f9c50f4c2d9310280555364152",
+      "playerId": "plr_d3983a6d",
+      "playerName": "Lexya",
+      "avatar": "/avatars/pizza.svg",
+      "roomId": "bistro_main",
+      "score": 8500,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792825395014,
+      "disconnectedAt": null
+    }
+  },
+  "authTokens": {
+    "auth_5f02aa5c12ca0fbc8fac9edf182e27662f46f5359bce36c5": {
+      "username": "Kostya",
+      "createdAt": "2026-10-20T14:19:15.122Z",
+      "expiresAt": "2026-11-19T14:19:15.122Z"
+    },
+    "auth_c07fceb95dbebe33b8a842ba7d772aad8ef468ae1bb9f4d2": {
+      "username": "Lexya",
+      "createdAt": "2026-10-22T16:36:40.364Z",
+      "expiresAt": "2026-11-21T16:36:40.364Z"
+    }
+  },
+  "unlockedRecipes": [
+    {
+      "id": "recipe_pair_pasta_cheese_1792446255170",
+      "foodId": "pair_pasta_cheese",
+      "pairId": "pair_pasta_cheese",
+      "name": "Спагетти + Сыр",
+      "emoji": "🍝 🧀",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Спагетти + Сыр Пармезан",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T21:44:15.170Z",
+      "updatedAt": "2026-10-19T21:44:15.170Z"
+    },
+    {
+      "id": "recipe_pair_sushi_chopsticks_1792427492046",
+      "foodId": "pair_sushi_chopsticks",
+      "pairId": "pair_sushi_chopsticks",
+      "name": "Суши + Палочки",
+      "emoji": "🥢 🍣",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 11,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-19T16:31:32.046Z",
+      "updatedAt": "2026-10-19T17:42:40.282Z"
+    },
+    {
+      "id": "recipe_pair_icecream_strawberry_1792427486420",
+      "foodId": "pair_icecream_strawberry",
+      "pairId": "pair_icecream_strawberry",
+      "name": "Мороженое + Клубника",
+      "emoji": "🍓 🍦",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Клубника + Мороженое",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:31:26.420Z",
+      "updatedAt": "2026-10-19T16:31:26.420Z"
+    },
+    {
+      "id": "recipe_pair_pancakes_honey_1792427404398",
+      "foodId": "pair_pancakes_honey",
+      "pairId": "pair_pancakes_honey",
+      "name": "Блины + Мед",
+      "emoji": "🥞 🍯",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Блинчики + Мед",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:30:04.398Z",
+      "updatedAt": "2026-10-19T16:30:04.398Z"
+    },
+    {
+      "id": "recipe_pair_tea_cookie_1792427261485",
+      "foodId": "pair_tea_cookie",
+      "pairId": "pair_tea_cookie",
+      "name": "Чай + Печенье",
+      "emoji": "🍪 🍵",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Печенье + Зеленый Чай",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:27:41.485Z",
+      "updatedAt": "2026-10-19T16:27:41.485Z"
+    },
+    {
+      "id": "recipe_pair_croissant_chocolate_1792315468671",
+      "foodId": "pair_croissant_chocolate",
+      "pairId": "pair_croissant_chocolate",
+      "name": "Круассан + Шоколад",
+      "emoji": "🍫 🥐",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 15,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-18T09:24:28.671Z",
+      "updatedAt": "2026-10-18T16:47:10.463Z"
+    },
+    {
+      "id": "recipe_pair_dumplings_sourcream_1792315460019",
+      "foodId": "pair_dumplings_sourcream",
+      "pairId": "pair_dumplings_sourcream",
+      "name": "Пельмени + Сметана",
+      "emoji": "🥟 🍶",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Пельмени + Сметана",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:24:20.019Z",
+      "updatedAt": "2026-10-18T09:24:20.019Z"
+    },
+    {
+      "id": "recipe_pair_sandwich_juice_1792315448985",
+      "foodId": "pair_sandwich_juice",
+      "pairId": "pair_sandwich_juice",
+      "name": "Сэндвич + Сок",
+      "emoji": "🥪 🧃",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Сэндвич + Свежий сок",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:24:08.985Z",
+      "updatedAt": "2026-10-18T09:24:08.985Z"
+    },
+    {
+      "id": "recipe_pair_ramen_egg_1792315394772",
+      "foodId": "pair_ramen_egg",
+      "pairId": "pair_ramen_egg",
+      "name": "Рамен + Яйцо",
+      "emoji": "🍜 🥚",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Рамен + Яйцо",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:23:14.772Z",
+      "updatedAt": "2026-10-18T09:23:14.772Z"
+    },
+    {
+      "id": "recipe_pair_coffee_donut_1792156828983",
+      "foodId": "pair_coffee_donut",
+      "pairId": "pair_coffee_donut",
+      "name": "Кофе + Пончик",
+      "emoji": "☕ 🍩",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 7,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-16T13:20:28.983Z",
+      "updatedAt": "2026-10-17T06:00:35.020Z"
+    },
+    {
+      "id": "recipe_pair_popcorn_cocktail_1792156819784",
+      "foodId": "pair_popcorn_cocktail",
+      "pairId": "pair_popcorn_cocktail",
+      "name": "Попкорн + Коктейль",
+      "emoji": "🍿 🍹",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Попкорн + Коктейль",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T13:20:19.784Z",
+      "updatedAt": "2026-10-16T13:20:19.784Z"
+    },
+    {
+      "id": "recipe_pair_burger_fries",
+      "foodId": "pair_burger_fries",
+      "pairId": "pair_burger_fries",
+      "name": "Бургер + Картошка Фри",
+      "emoji": "🍔 🍟",
+      "category": "Американская классика",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 3,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-16T11:00:00.000Z",
+      "updatedAt": "2026-10-16T13:13:55.286Z"
+    },
+    {
+      "id": "recipe_pair_pizza_soda",
+      "foodId": "pair_pizza_soda",
+      "pairId": "pair_pizza_soda",
+      "name": "Пицца + Газировка",
+      "emoji": "🍕 🥤",
+      "category": "Итальянская классика",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Моцарелла и ледяная кола",
+      "spiceLevel": 2,
+      "sticker": "⭐",
+      "chefNotes": "Хрустящий бортик и освежающий газированный напиток!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T11:15:00.000Z",
+      "updatedAt": "2026-10-16T11:15:00.000Z"
+    },
+    {
+      "id": "recipe_pair_taco_burrito",
+      "foodId": "pair_taco_burrito",
+      "pairId": "pair_taco_burrito",
+      "name": "Тако + Буррито",
+      "emoji": "🌮 🌯",
+      "category": "Мексиканский дуэт",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Острая сальса и специи тако",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Мексиканский дуэт: хрустящий тако и сочный сытный буррито!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T11:30:00.000Z",
+      "updatedAt": "2026-10-16T11:30:00.000Z"
+    }
+  ],
   "conflictAuditLog": [
     {
-      "id": "conf_1792148607105_pg14",
-      "timestamp": "2026-10-16T11:03:27.105Z",
-      "targetType": "GALLERY_ITEM",
-      "targetId": "photo_init_1",
+      "id": "conf_1792682631857_k4xu",
+      "timestamp": "2026-10-22T15:23:51.857Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663781950_qh38",
+      "timestamp": "2026-10-22T10:09:41.950Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.21,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663649697_d9yq",
+      "timestamp": "2026-10-22T10:07:29.697Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.2,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663577204_n4at",
+      "timestamp": "2026-10-22T10:06:17.204Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663486260_s381",
+      "timestamp": "2026-10-22T10:04:46.260Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.21,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663289037_7h82",
+      "timestamp": "2026-10-22T10:01:29.037Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792663054645_xrfi",
+      "timestamp": "2026-10-22T09:57:34.645Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.2,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792661031852_dfoo",
+      "timestamp": "2026-10-22T09:23:51.852Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792529574012_qmyb",
+      "timestamp": "2026-10-20T20:52:54.012Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792527564954_t6n0",
+      "timestamp": "2026-10-20T20:19:24.954Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792527415437_f3yc",
+      "timestamp": "2026-10-20T20:16:55.437Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792527346585_v96d",
+      "timestamp": "2026-10-20T20:15:46.585Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792516363172_ynov",
+      "timestamp": "2026-10-20T17:12:43.172Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792512479249_zoeb",
+      "timestamp": "2026-10-20T16:07:59.249Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792509709809_gatj",
+      "timestamp": "2026-10-20T15:21:49.809Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792505173726_ecio",
+      "timestamp": "2026-10-20T14:06:13.726Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792503651847_mrwh",
+      "timestamp": "2026-10-20T13:40:51.847Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792495771272_ctm0",
+      "timestamp": "2026-10-20T11:29:31.272Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792447219287_vpq9",
+      "timestamp": "2026-10-19T22:00:19.287Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.18,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792446252853_2ede",
+      "timestamp": "2026-10-19T21:44:12.853Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.21,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792446215560_dei8",
+      "timestamp": "2026-10-19T21:43:35.560Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.2,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792445037632_iisu",
+      "timestamp": "2026-10-19T21:23:57.632Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.08,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.1 мс быстрее!"
+    },
+    {
+      "id": "conf_1792444413562_ntqd",
+      "timestamp": "2026-10-19T21:13:33.562Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792443091174_w8p1",
+      "timestamp": "2026-10-19T20:51:31.174Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.22,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792437445481_0pef",
+      "timestamp": "2026-10-19T19:17:25.481Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792433864892_j306",
+      "timestamp": "2026-10-19T18:17:44.892Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.23,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792433814359_9yg6",
+      "timestamp": "2026-10-19T18:16:54.359Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_4",
+      "targetTitle": "Карточка #4",
+      "roomId": "test_bistro",
+      "cardIndex": 3,
+      "timeDeltaMs": 14.21,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Alice"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #4 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792431760282_w7ol",
+      "timestamp": "2026-10-19T17:42:40.282Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_sushi_chopsticks_1792427492046",
+      "targetTitle": "Суши + Палочки",
+      "expectedVersion": 9,
+      "resolvedVersion": 11,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792429630439_n7hc",
+      "timestamp": "2026-10-19T17:07:10.439Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_sushi_chopsticks_1792427492046",
+      "targetTitle": "Суши + Палочки",
+      "expectedVersion": 7,
+      "resolvedVersion": 9,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792429534036_5png",
+      "timestamp": "2026-10-19T17:05:34.036Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_sushi_chopsticks_1792427492046",
+      "targetTitle": "Суши + Палочки",
+      "expectedVersion": 5,
+      "resolvedVersion": 7,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792429428989_b2bu",
+      "timestamp": "2026-10-19T17:03:48.989Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_sushi_chopsticks_1792427492046",
+      "targetTitle": "Суши + Палочки",
       "expectedVersion": 3,
       "resolvedVersion": 5,
       "editorIncoming": "Bob",
       "editorPrevious": "Alice",
-      "resolutionType": "FIELD_LEVEL_MERGE",
-      "resolutionMessage": "Разрешен конфликт версий v3 -> v5: поля успешно объединены сервером.",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792428426537_up73",
+      "timestamp": "2026-10-19T16:47:06.537Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_sushi_chopsticks_1792427492046",
+      "targetTitle": "Суши + Палочки",
+      "expectedVersion": 1,
+      "resolvedVersion": 3,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "3_WAY_FIELD_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля рецепта бесконфликтно объединены сервером.",
       "conflictingFields": [
+        "secretIngredient",
+        "spiceLevel",
         "sticker"
       ],
       "conflictDetails": [
+        {
+          "field": "secretIngredient",
+          "originalByOther": "Палочки и соус + Суши",
+          "attemptedByIncoming": "Особый соус от Боба",
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "spiceLevel",
+          "originalByOther": 1,
+          "attemptedByIncoming": 4,
+          "otherEditor": "Alice"
+        },
         {
           "field": "sticker",
           "originalByOther": "⭐",
@@ -113,27 +1462,519 @@
       ]
     },
     {
-      "id": "conf_1792148566512_lt4b",
-      "timestamp": "2026-10-16T11:02:46.512Z",
-      "targetType": "GALLERY_ITEM",
-      "targetId": "photo_init_1",
+      "id": "conf_1792342030464_91v0",
+      "timestamp": "2026-10-18T16:47:10.464Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 13,
+      "resolvedVersion": 15,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792340992349_j7sk",
+      "timestamp": "2026-10-18T16:29:52.349Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_3",
+      "targetTitle": "Карточка #3",
+      "roomId": "bistro_main",
+      "cardIndex": 2,
+      "timeDeltaMs": 14.19,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Шеф-Повар"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #3 на 14.2 мс быстрее!"
+    },
+    {
+      "id": "conf_1792340984185_x1y8",
+      "timestamp": "2026-10-18T16:29:44.185Z",
+      "targetType": "CARD_FLIP_RACE",
+      "targetId": "card_3",
+      "targetTitle": "Карточка #3",
+      "roomId": "bistro_main",
+      "cardIndex": 2,
+      "timeDeltaMs": 14.15,
+      "winner": "Алиса (Шеф-Бот)",
+      "competitors": [
+        "Алиса (Шеф-Бот)",
+        "Шеф-Повар"
+      ],
+      "resolutionType": "MICROSECOND_TIME_ARBITRATION",
+      "resolutionMessage": "⚡ Конкурентный клик! Алиса (Шеф-Бот) нажал на карточку #3 на 14.1 мс быстрее!"
+    },
+    {
+      "id": "conf_1792340640462_h43n",
+      "timestamp": "2026-10-18T16:24:00.462Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 11,
+      "resolvedVersion": 13,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792317611375_pdo4",
+      "timestamp": "2026-10-18T10:00:11.375Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 9,
+      "resolvedVersion": 11,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792317513489_dh0t",
+      "timestamp": "2026-10-18T09:58:33.489Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 7,
+      "resolvedVersion": 9,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792317435300_yjr1",
+      "timestamp": "2026-10-18T09:57:15.300Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 5,
+      "resolvedVersion": 7,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792317399898_fycw",
+      "timestamp": "2026-10-18T09:56:39.898Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
+      "expectedVersion": 3,
+      "resolvedVersion": 5,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792316623397_xvr4",
+      "timestamp": "2026-10-18T09:43:43.397Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_croissant_chocolate_1792315468671",
+      "targetTitle": "Круассан + Шоколад",
       "expectedVersion": 1,
       "resolvedVersion": 3,
       "editorIncoming": "Bob",
       "editorPrevious": "Alice",
-      "resolutionType": "FIELD_LEVEL_MERGE",
-      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля успешно объединены сервером.",
+      "resolutionType": "3_WAY_FIELD_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля рецепта бесконфликтно объединены сервером.",
       "conflictingFields": [
-        "filter"
+        "secretIngredient",
+        "spiceLevel",
+        "sticker"
       ],
       "conflictDetails": [
         {
-          "field": "filter",
-          "originalByOther": "vintage",
-          "attemptedByIncoming": "cyberpunk",
+          "field": "secretIngredient",
+          "originalByOther": "Шоколад + Круассан",
+          "attemptedByIncoming": "Особый соус от Боба",
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "spiceLevel",
+          "originalByOther": 1,
+          "attemptedByIncoming": 4,
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "sticker",
+          "originalByOther": "⭐",
+          "attemptedByIncoming": "🔥",
           "otherEditor": "Alice"
         }
       ]
+    },
+    {
+      "id": "conf_1792216835020_g7gd",
+      "timestamp": "2026-10-17T06:00:35.020Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_coffee_donut_1792156828983",
+      "targetTitle": "Кофе + Пончик",
+      "expectedVersion": 5,
+      "resolvedVersion": 7,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792158790862_u829",
+      "timestamp": "2026-10-16T13:53:10.863Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_coffee_donut_1792156828983",
+      "targetTitle": "Кофе + Пончик",
+      "expectedVersion": 3,
+      "resolvedVersion": 5,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "NO_OP_MERGED",
+      "resolutionMessage": "Изменения уже согласованы с актуальной версией блюда.",
+      "conflictingFields": [],
+      "conflictDetails": []
+    },
+    {
+      "id": "conf_1792157831608_8gg1",
+      "timestamp": "2026-10-16T13:37:11.608Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_coffee_donut_1792156828983",
+      "targetTitle": "Кофе + Пончик",
+      "expectedVersion": 1,
+      "resolvedVersion": 3,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "3_WAY_FIELD_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля рецепта бесконфликтно объединены сервером.",
+      "conflictingFields": [
+        "secretIngredient",
+        "spiceLevel",
+        "sticker"
+      ],
+      "conflictDetails": [
+        {
+          "field": "secretIngredient",
+          "originalByOther": "Кофе + Пончик",
+          "attemptedByIncoming": "Особый соус от Боба",
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "spiceLevel",
+          "originalByOther": 1,
+          "attemptedByIncoming": 4,
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "sticker",
+          "originalByOther": "⭐",
+          "attemptedByIncoming": "🔥",
+          "otherEditor": "Alice"
+        }
+      ]
+    },
+    {
+      "id": "conf_1792156435286_lsd3",
+      "timestamp": "2026-10-16T13:13:55.286Z",
+      "targetType": "RECIPE_ITEM",
+      "targetId": "recipe_pair_burger_fries",
+      "targetTitle": "Бургер + Картошка Фри",
+      "expectedVersion": 1,
+      "resolvedVersion": 3,
+      "editorIncoming": "Bob",
+      "editorPrevious": "Alice",
+      "resolutionType": "3_WAY_FIELD_MERGE",
+      "resolutionMessage": "Разрешен конфликт версий v1 -> v3: поля рецепта бесконфликтно объединены сервером.",
+      "conflictingFields": [
+        "secretIngredient",
+        "spiceLevel"
+      ],
+      "conflictDetails": [
+        {
+          "field": "secretIngredient",
+          "originalByOther": "Трюфельный соус и чеддер",
+          "attemptedByIncoming": "Особый соус от Боба",
+          "otherEditor": "Alice"
+        },
+        {
+          "field": "spiceLevel",
+          "originalByOther": 1,
+          "attemptedByIncoming": 4,
+          "otherEditor": "Alice"
+        }
+      ]
+    }
+  ],
+  "recipeBook": [
+    {
+      "id": "recipe_pair_pasta_cheese_1792446255170",
+      "foodId": "pair_pasta_cheese",
+      "pairId": "pair_pasta_cheese",
+      "name": "Спагетти + Сыр",
+      "emoji": "🍝 🧀",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Спагетти + Сыр Пармезан",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T21:44:15.170Z",
+      "updatedAt": "2026-10-19T21:44:15.170Z"
+    },
+    {
+      "id": "recipe_pair_sushi_chopsticks_1792427492046",
+      "foodId": "pair_sushi_chopsticks",
+      "pairId": "pair_sushi_chopsticks",
+      "name": "Суши + Палочки",
+      "emoji": "🥢 🍣",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 11,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-19T16:31:32.046Z",
+      "updatedAt": "2026-10-19T17:42:40.282Z"
+    },
+    {
+      "id": "recipe_pair_icecream_strawberry_1792427486420",
+      "foodId": "pair_icecream_strawberry",
+      "pairId": "pair_icecream_strawberry",
+      "name": "Мороженое + Клубника",
+      "emoji": "🍓 🍦",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Клубника + Мороженое",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:31:26.420Z",
+      "updatedAt": "2026-10-19T16:31:26.420Z"
+    },
+    {
+      "id": "recipe_pair_pancakes_honey_1792427404398",
+      "foodId": "pair_pancakes_honey",
+      "pairId": "pair_pancakes_honey",
+      "name": "Блины + Мед",
+      "emoji": "🥞 🍯",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Блинчики + Мед",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:30:04.398Z",
+      "updatedAt": "2026-10-19T16:30:04.398Z"
+    },
+    {
+      "id": "recipe_pair_tea_cookie_1792427261485",
+      "foodId": "pair_tea_cookie",
+      "pairId": "pair_tea_cookie",
+      "name": "Чай + Печенье",
+      "emoji": "🍪 🍵",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Печенье + Зеленый Чай",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-19T16:27:41.485Z",
+      "updatedAt": "2026-10-19T16:27:41.485Z"
+    },
+    {
+      "id": "recipe_pair_croissant_chocolate_1792315468671",
+      "foodId": "pair_croissant_chocolate",
+      "pairId": "pair_croissant_chocolate",
+      "name": "Круассан + Шоколад",
+      "emoji": "🍫 🥐",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 15,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-18T09:24:28.671Z",
+      "updatedAt": "2026-10-18T16:47:10.463Z"
+    },
+    {
+      "id": "recipe_pair_dumplings_sourcream_1792315460019",
+      "foodId": "pair_dumplings_sourcream",
+      "pairId": "pair_dumplings_sourcream",
+      "name": "Пельмени + Сметана",
+      "emoji": "🥟 🍶",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Пельмени + Сметана",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:24:20.019Z",
+      "updatedAt": "2026-10-18T09:24:20.019Z"
+    },
+    {
+      "id": "recipe_pair_sandwich_juice_1792315448985",
+      "foodId": "pair_sandwich_juice",
+      "pairId": "pair_sandwich_juice",
+      "name": "Сэндвич + Сок",
+      "emoji": "🥪 🧃",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Сэндвич + Свежий сок",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:24:08.985Z",
+      "updatedAt": "2026-10-18T09:24:08.985Z"
+    },
+    {
+      "id": "recipe_pair_ramen_egg_1792315394772",
+      "foodId": "pair_ramen_egg",
+      "pairId": "pair_ramen_egg",
+      "name": "Рамен + Яйцо",
+      "emoji": "🍜 🥚",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Рамен + Яйцо",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-18T09:23:14.772Z",
+      "updatedAt": "2026-10-18T09:23:14.772Z"
+    },
+    {
+      "id": "recipe_pair_coffee_donut_1792156828983",
+      "foodId": "pair_coffee_donut",
+      "pairId": "pair_coffee_donut",
+      "name": "Кофе + Пончик",
+      "emoji": "☕ 🍩",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 7,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-16T13:20:28.983Z",
+      "updatedAt": "2026-10-17T06:00:35.020Z"
+    },
+    {
+      "id": "recipe_pair_popcorn_cocktail_1792156819784",
+      "foodId": "pair_popcorn_cocktail",
+      "pairId": "pair_popcorn_cocktail",
+      "name": "Попкорн + Коктейль",
+      "emoji": "🍿 🍹",
+      "category": "Гастрономическая пара",
+      "calories": "Идеальное сочетание",
+      "secretIngredient": "Попкорн + Коктейль",
+      "spiceLevel": 1,
+      "sticker": "⭐",
+      "chefNotes": "Пара успешно открыта игроком Шеф-Повар!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T13:20:19.784Z",
+      "updatedAt": "2026-10-16T13:20:19.784Z"
+    },
+    {
+      "id": "recipe_pair_burger_fries",
+      "foodId": "pair_burger_fries",
+      "pairId": "pair_burger_fries",
+      "name": "Бургер + Картошка Фри",
+      "emoji": "🍔 🍟",
+      "category": "Американская классика",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Особый соус от Боба",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Фирменная заметка от Алисы: идеальная хрустящая корочка!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 3,
+      "lastModifiedBy": "Bob+Alice",
+      "createdAt": "2026-10-16T11:00:00.000Z",
+      "updatedAt": "2026-10-16T13:13:55.286Z"
+    },
+    {
+      "id": "recipe_pair_pizza_soda",
+      "foodId": "pair_pizza_soda",
+      "pairId": "pair_pizza_soda",
+      "name": "Пицца + Газировка",
+      "emoji": "🍕 🥤",
+      "category": "Итальянская классика",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Моцарелла и ледяная кола",
+      "spiceLevel": 2,
+      "sticker": "⭐",
+      "chefNotes": "Хрустящий бортик и освежающий газированный напиток!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T11:15:00.000Z",
+      "updatedAt": "2026-10-16T11:15:00.000Z"
+    },
+    {
+      "id": "recipe_pair_taco_burrito",
+      "foodId": "pair_taco_burrito",
+      "pairId": "pair_taco_burrito",
+      "name": "Тако + Буррито",
+      "emoji": "🌮 🌯",
+      "category": "Мексиканский дуэт",
+      "calories": "Идеальное комбо",
+      "secretIngredient": "Острая сальса и специи тако",
+      "spiceLevel": 4,
+      "sticker": "🔥",
+      "chefNotes": "Мексиканский дуэт: хрустящий тако и сочный сытный буррито!",
+      "discoveredBy": "Шеф-Повар",
+      "version": 1,
+      "lastModifiedBy": "Шеф-Повар",
+      "createdAt": "2026-10-16T11:30:00.000Z",
+      "updatedAt": "2026-10-16T11:30:00.000Z"
     }
   ]
 }

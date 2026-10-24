@@ -1,6 +1,6 @@
 /**
  * Procedural Audio Synthesizer via Web Audio API.
- * Zero external audio assets needed; works reliably in any browser.
+ * Zero external audio files/assets needed; works natively in any modern browser.
  */
 class SoundEngine {
   constructor() {
@@ -25,62 +25,8 @@ class SoundEngine {
     return this.isMuted;
   }
 
-  // Camera mechanical shutter sound
-  playShutter() {
-    if (this.isMuted) return;
-    this.ensureContext();
-    if (!this.ctx) return;
-
-    const t = this.ctx.currentTime;
-
-    // Noise click (shutter blade opening)
-    const bufferSize = this.ctx.sampleRate * 0.05;
-    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-
-    const noise = this.ctx.createBufferSource();
-    noise.buffer = buffer;
-
-    const filter = this.ctx.createBiquadFilter();
-    filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(1800, t);
-    filter.Q.setValueAtTime(3, t);
-
-    const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.8, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
-
-    noise.connect(filter);
-    filter.connect(gain);
-    gain.connect(this.ctx.destination);
-    noise.start(t);
-
-    // Motor whirr / winding sound
-    setTimeout(() => {
-      if (this.isMuted || !this.ctx) return;
-      const t2 = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const motorGain = this.ctx.createGain();
-
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(140, t2);
-      osc.frequency.exponentialRampToValueAtTime(80, t2 + 0.12);
-
-      motorGain.gain.setValueAtTime(0.15, t2);
-      motorGain.gain.exponentialRampToValueAtTime(0.001, t2 + 0.12);
-
-      osc.connect(motorGain);
-      motorGain.connect(this.ctx.destination);
-      osc.start(t2);
-      osc.stop(t2 + 0.13);
-    }, 60);
-  }
-
-  // Camera focus lock beep
-  playFocusBeep() {
+  // Smooth card flip swish
+  playCardFlip() {
     if (this.isMuted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -90,18 +36,73 @@ class SoundEngine {
     const gain = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200, t);
-    gain.gain.setValueAtTime(0.12, t);
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    osc.frequency.setValueAtTime(400, t);
+    osc.frequency.exponentialRampToValueAtTime(700, t + 0.08);
+
+    gain.gain.setValueAtTime(0.15, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.09);
+    osc.stop(t + 0.11);
   }
 
-  // Target spotted chime
-  playTargetSpotted() {
+  // Food pair match harmonic chord
+  playPairMatch() {
+    if (this.isMuted) return;
+    this.ensureContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    // Pleasant major triad (E5, G#5, B5, E6)
+    const freqs = [659.25, 830.61, 987.77, 1318.51];
+    freqs.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const noteTime = t + idx * 0.06;
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.2, noteTime);
+      gain.gain.exponentialRampToValueAtTime(0.005, noteTime + 0.35);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.36);
+    });
+  }
+
+  // Combo streak sparkle
+  playComboStreak() {
+    if (this.isMuted) return;
+    this.ensureContext();
+    if (!this.ctx) return;
+
+    const t = this.ctx.currentTime;
+    const freqs = [784, 988, 1175, 1568];
+    freqs.forEach((freq, idx) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const noteTime = t + idx * 0.04;
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, noteTime);
+
+      gain.gain.setValueAtTime(0.22, noteTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.25);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.26);
+    });
+  }
+
+  // Mismatch soft thud
+  playMismatch() {
     if (this.isMuted) return;
     this.ensureContext();
     if (!this.ctx) return;
@@ -110,26 +111,26 @@ class SoundEngine {
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(660, t);
-    osc.frequency.exponentialRampToValueAtTime(880, t + 0.15);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(260, t);
+    osc.frequency.exponentialRampToValueAtTime(140, t + 0.15);
 
-    gain.gain.setValueAtTime(0.2, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+    gain.gain.setValueAtTime(0.12, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.22);
+    osc.stop(t + 0.17);
   }
 
-  // Win Fanfare
+  // Win fanfare arpeggio
   playWinFanfare() {
     if (this.isMuted) return;
     this.ensureContext();
     if (!this.ctx) return;
 
-    const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
     notes.forEach((freq, index) => {
       setTimeout(() => {
         if (!this.ctx) return;
@@ -139,13 +140,13 @@ class SoundEngine {
 
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(freq, t);
-        gain.gain.setValueAtTime(0.25, t);
-        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.35);
+        gain.gain.setValueAtTime(0.24, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start(t);
-        osc.stop(t + 0.36);
+        osc.stop(t + 0.42);
       }, index * 90);
     });
   }
@@ -162,17 +163,22 @@ class SoundEngine {
 
     osc.type = 'sawtooth';
     osc.frequency.setValueAtTime(440, t);
-    osc.frequency.linearRampToValueAtTime(880, t + 0.1);
-    osc.frequency.linearRampToValueAtTime(550, t + 0.2);
+    osc.frequency.linearRampToValueAtTime(880, t + 0.08);
+    osc.frequency.linearRampToValueAtTime(550, t + 0.16);
 
     gain.gain.setValueAtTime(0.18, t);
-    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.25);
+    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.22);
 
     osc.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(t);
-    osc.stop(t + 0.26);
+    osc.stop(t + 0.23);
   }
+
+  // Backward compatibility aliases
+  playShutter() { this.playCardFlip(); }
+  playFocusBeep() { this.playCardFlip(); }
+  playTargetSpotted() { this.playPairMatch(); }
 }
 
 export const soundEngine = new SoundEngine();

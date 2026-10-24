@@ -1,21 +1,22 @@
 {
-  "name": "snap-safari-game",
+  "name": "food-duo-game",
   "version": "1.0.0",
-  "description": "Real-time multiplayer photo hunt game with WebSockets, pure JavaScript, data persistence, conflict resolution, and offline resilience",
+  "description": "Real-time multiplayer food memory card-matching game with WebSockets, pure JavaScript, data persistence, conflict resolution, and offline resilience",
   "main": "server/server.js",
   "type": "module",
   "scripts": {
     "start": "node server/server.js",
     "dev": "node server/server.js",
-    "test": "node test/test-concurrency.js"
+    "test": "node test/test-concurrency.js && node test/test-multiplayer-sync.js && node test/test-persistence-restart.js && node test/test-multiplayer-reconnect-pause.js && node test/test-account-leaderboard-scores.js && node test/test-games-played-and-pause-on-exit.js && node test/test-max-players-room-overflow.js && node test/test-avatar-persistence-and-no-history.js"
   },
   "keywords": [
     "websockets",
     "pure-javascript",
     "multiplayer",
-    "realtime-game",
-    "conflict-resolution",
-    "photo-hunt"
+    "card-matching",
+    "memory-game",
+    "food-game",
+    "conflict-resolution"
   ],
   "author": "BSUIR Student",
   "license": "MIT",

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: snap-safari-game
+    name: food-duo-game
     env: node
     plan: free
     buildCommand: npm install

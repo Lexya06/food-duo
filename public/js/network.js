@@ -1,12 +1,12 @@
 /**
- * Network Manager: WebSocket connection, heartbeat, offline detection,
- * state persistence in localStorage, action queuing, and auto-reconnection.
+ * Network Manager: Native WebSocket connection, heartbeat, offline detection,
+ * state persistence in localStorage, offline action queuing, and auto-reconnection.
  */
 export class NetworkClient {
   constructor() {
     this.ws = null;
-    this.sessionToken = localStorage.getItem('snapsafari_session_token') || null;
-    this.offlineQueue = JSON.parse(localStorage.getItem('snapsafari_offline_queue') || '[]');
+    this.sessionToken = sessionStorage.getItem('foodmatch_session_token') || localStorage.getItem('foodmatch_session_token') || null;
+    this.offlineQueue = JSON.parse(sessionStorage.getItem('foodmatch_offline_queue') || '[]');
     this.status = 'DISCONNECTED'; // 'CONNECTED' | 'RECONNECTING' | 'DISCONNECTED'
     this.reconnectAttempts = 0;
     this.maxReconnectAttempts = 30;
@@ -41,6 +41,10 @@ export class NetworkClient {
   }
 
   connect(roomData = null) {
+    if (roomData) {
+      this.lastRoomData = roomData;
+    }
+
     if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
       return;
     }
@@ -74,15 +78,29 @@ export class NetworkClient {
       this.isManualDisconnect = false;
       this.emit('status_change', { status: this.status });
 
+      const authToken = sessionStorage.getItem('foodmatch_auth_token') || localStorage.getItem('foodmatch_auth_token') || null;
+
+      const fallbackRoomData = this.lastRoomData || {
+        playerName: sessionStorage.getItem('foodmatch_player_name') || localStorage.getItem('foodmatch_player_name') || 'Шеф-Повар',
+        avatar: sessionStorage.getItem('foodmatch_player_avatar') || localStorage.getItem('foodmatch_player_avatar') || '/avatars/chef_male.svg',
+        roomId: 'bistro_main'
+      };
+
       // If we have an existing session token, resume it!
       if (this.sessionToken) {
-        console.log('[Network] Resuming session with token:', this.sessionToken);
         this.send('RESUME_SESSION', {
           token: this.sessionToken,
+          authToken,
+          playerName: fallbackRoomData.playerName,
+          avatar: fallbackRoomData.avatar,
+          roomId: fallbackRoomData.roomId,
           queuedActions: this.offlineQueue
         });
-      } else if (roomData) {
-        this.send('JOIN_ROOM', roomData);
+      } else {
+        this.send('JOIN_ROOM', {
+          ...fallbackRoomData,
+          authToken
+        });
       }
     };
 
@@ -108,54 +126,88 @@ export class NetworkClient {
   }
 
   handleIncomingMessage(msg) {
-    const { type, payload } = msg;
+    if (!msg || typeof msg !== 'object') return;
+    const type = msg.type;
+    const payload = msg.payload !== undefined ? msg.payload : msg;
 
     if (type === 'INIT_STATE') {
       if (payload.sessionToken) {
         this.setSessionToken(payload.sessionToken);
       }
+      if (payload.room && payload.room.roomId) {
+        if (!this.lastRoomData) this.lastRoomData = {};
+        this.lastRoomData.roomId = payload.room.roomId;
+      }
     } else if (type === 'SESSION_RESUMED') {
       if (payload.success) {
         console.log('[Network] Session resumed successfully! Clearing offline queue.');
         this.offlineQueue = [];
-        this.persistQueue();
-        this.emit('status_change', { status: 'CONNECTED', resumed: true });
+        this.saveOfflineQueue();
+        if (payload.sessionToken) {
+          this.setSessionToken(payload.sessionToken);
+        }
+        if (payload.room && payload.room.roomId) {
+          if (!this.lastRoomData) this.lastRoomData = {};
+          this.lastRoomData.roomId = payload.room.roomId;
+        }
       } else {
-        console.warn('[Network] Session expired on server. Requesting new join.');
-        this.sessionToken = null;
-        localStorage.removeItem('snapsafari_session_token');
-        this.emit('session_expired');
+        console.warn('[Network] Session resumption rejected (expired). Resetting token & joining room.');
+        this.setSessionToken(null);
+        const fallbackRoomData = this.lastRoomData || {
+          playerName: localStorage.getItem('foodmatch_player_name') || 'Шеф-Повар',
+          avatar: localStorage.getItem('foodmatch_player_avatar') || '/avatars/chef_male.svg',
+          roomId: 'bistro_main'
+        };
+        this.send('JOIN_ROOM', fallbackRoomData);
       }
     }
 
-    // Pass message to registered handlers
     this.emit(type, payload);
     this.emit('*', msg);
   }
 
   send(type, payload = {}) {
-    const msg = { type, payload, timestamp: Date.now() };
+    const message = JSON.stringify({ type, payload });
 
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(msg));
+      this.ws.send(message);
       return true;
-    } else {
-      // Offline fallback: Queue modifications locally if relevant
-      if (['UPDATE_BOARD_CARD'].includes(type)) {
-        console.log('[Network] Queuing action while offline:', type);
-        const actionItem = {
-          id: `queue_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-          type,
-          payload,
-          timestamp: Date.now()
-        };
-        this.offlineQueue.push(actionItem);
-        this.persistQueue();
-        this.emit('status_change', { status: this.status, queueLength: this.offlineQueue.length });
-        return false;
-      }
-      return false;
     }
+
+    // If offline, queue appropriate editable actions (e.g., recipe updates)
+    if (type === 'UPDATE_RECIPE_ITEM' || type === 'UPDATE_BOARD_CARD') {
+      console.warn(`[Network] Offline: buffering action ${type} in local queue.`);
+      this.offlineQueue.push({
+        id: `offline_act_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        type,
+        payload,
+        queuedAt: new Date().toISOString()
+      });
+      this.saveOfflineQueue();
+      this.emit('offline_action_queued', {
+        actionType: type,
+        queueLength: this.offlineQueue.length
+      });
+    }
+
+    return false;
+  }
+
+  setSessionToken(token) {
+    this.sessionToken = token;
+    if (token) {
+      sessionStorage.setItem('foodmatch_session_token', token);
+      localStorage.setItem('foodmatch_session_token', token);
+    } else {
+      sessionStorage.removeItem('foodmatch_session_token');
+      localStorage.removeItem('foodmatch_session_token');
+    }
+  }
+
+  saveOfflineQueue() {
+    const serialized = JSON.stringify(this.offlineQueue);
+    sessionStorage.setItem('foodmatch_offline_queue', serialized);
+    this.emit('queue_updated', { length: this.offlineQueue.length });
   }
 
   handleConnectionLoss(reason) {
@@ -169,25 +221,20 @@ export class NetworkClient {
   }
 
   scheduleReconnect() {
-    if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.error('[Network] Max reconnect attempts reached.');
+    if (this.reconnectTimer || this.isManualDisconnect) return;
+
+    this.reconnectAttempts++;
+    if (this.reconnectAttempts > this.maxReconnectAttempts) {
+      console.warn('[Network] Max reconnection attempts reached.');
       return;
     }
 
-    this.reconnectAttempts += 1;
-    // Exponential backoff with jitter: 1s, 2s, 3s, max 6s
-    const delay = Math.min(6000, 1000 * Math.pow(1.4, this.reconnectAttempts) + Math.random() * 500);
-
+    // Exponential backoff: min 1s, max 8s
+    const delay = Math.min(1000 * Math.pow(1.3, this.reconnectAttempts), 8000);
     console.log(`[Network] Reconnecting in ${(delay / 1000).toFixed(1)}s (attempt ${this.reconnectAttempts})...`);
-    this.status = 'RECONNECTING';
-    this.emit('status_change', {
-      status: this.status,
-      nextAttemptSec: Math.round(delay / 1000),
-      attempt: this.reconnectAttempts,
-      queueLength: this.offlineQueue.length
-    });
 
     this.reconnectTimer = setTimeout(() => {
+      this.reconnectTimer = null;
       this.connect();
     }, delay);
   }
@@ -202,24 +249,30 @@ export class NetworkClient {
     this.connect();
   }
 
-  // Testing helper for Lab 4 bonus evaluation
+  // Debug tool to simulate sudden network disconnection (Lab Requirement 5)
   simulateDropConnection() {
-    console.warn('[Network] SIMULATING CONNECTION DROP FOR LAB EVALUATION');
+    console.warn('[Network Demo] Simulating network drop...');
     this.isManualDisconnect = true;
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
     if (this.ws) {
-      this.ws.close(1000, 'Simulated drop');
+      this.ws.close(1000, 'Demo network drop');
       this.ws = null;
     }
-    this.handleConnectionLoss('Имитация обрыва соединения');
+    this.status = 'DISCONNECTED';
+    this.emit('status_change', {
+      status: 'DISCONNECTED',
+      reason: 'Имитация обрыва соединения (Лабораторный тест ЛР4)',
+      queueLength: this.offlineQueue.length
+    });
   }
 
-  setSessionToken(token) {
-    this.sessionToken = token;
-    localStorage.setItem('snapsafari_session_token', token);
-  }
-
-  persistQueue() {
-    localStorage.setItem('snapsafari_offline_queue', JSON.stringify(this.offlineQueue));
+  resumeAfterSimulatedDrop() {
+    console.log('[Network Demo] Resuming from simulated network drop...');
+    this.isManualDisconnect = false;
+    this.reconnectNow();
   }
 }
 

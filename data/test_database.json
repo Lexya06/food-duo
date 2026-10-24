@@ -1,0 +1,282 @@
+{
+  "users": {
+    "Alice": {
+      "name": "Alice",
+      "avatar": "👨‍🍳",
+      "totalScore": 4050,
+      "gamesPlayed": 10,
+      "pairsMatched": 27,
+      "fastestMatchMs": 1200,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-16T13:13:54.921Z",
+      "lastSeen": "2026-10-22T15:23:52.424Z"
+    },
+    "Bob": {
+      "name": "Bob",
+      "avatar": "👨‍🍳",
+      "totalScore": 0,
+      "gamesPlayed": 7,
+      "pairsMatched": 0,
+      "fastestMatchMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-16T13:13:54.929Z",
+      "lastSeen": "2026-10-22T15:23:51.503Z"
+    },
+    "Шеф 1": {
+      "name": "Шеф 1",
+      "avatar": "👨‍🍳",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "pairsMatched": 0,
+      "fastestMatchMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-18T09:57:05.541Z",
+      "lastSeen": "2026-10-22T15:23:52.582Z"
+    },
+    "Шеф 2": {
+      "name": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "pairsMatched": 0,
+      "fastestMatchMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-18T09:57:05.547Z",
+      "lastSeen": "2026-10-22T15:23:52.586Z"
+    },
+    "Супер-Шеф": {
+      "name": "Супер-Шеф",
+      "avatar": "🍕",
+      "totalScore": 2200,
+      "gamesPlayed": 9,
+      "pairsMatched": 22,
+      "fastestMatchMs": 101,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-18T09:57:05.550Z",
+      "lastSeen": "2026-10-22T15:23:54.451Z"
+    },
+    "Шеф-Повар (2)": {
+      "name": "Шеф-Повар (2)",
+      "avatar": "👨‍🍳",
+      "totalScore": 0,
+      "gamesPlayed": 0,
+      "pairsMatched": 0,
+      "fastestMatchMs": null,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-22T15:23:54.619Z",
+      "lastSeen": "2026-10-22T15:23:54.619Z"
+    },
+    "Шеф А": {
+      "name": "Шеф А",
+      "avatar": "👨‍🍳",
+      "totalScore": 100,
+      "gamesPlayed": 1,
+      "pairsMatched": 1,
+      "fastestMatchMs": 100,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-22T15:23:55.069Z",
+      "lastSeen": "2026-10-22T15:23:59.160Z"
+    },
+    "Шеф Б": {
+      "name": "Шеф Б",
+      "avatar": "👩‍🍳",
+      "totalScore": 100,
+      "gamesPlayed": 1,
+      "pairsMatched": 1,
+      "fastestMatchMs": 100,
+      "accuracySum": 0,
+      "avgAccuracy": 0,
+      "createdAt": "2026-10-22T15:23:55.073Z",
+      "lastSeen": "2026-10-22T15:23:59.163Z"
+    }
+  },
+  "activeRooms": {},
+  "sessions": {
+    "ses_4e3f3ce8313842a2a643a03171e1f1c3": {
+      "token": "ses_4e3f3ce8313842a2a643a03171e1f1c3",
+      "playerId": "plr_4fa5f3e2",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792446253569,
+      "disconnectedAt": null
+    },
+    "ses_317be4864e1946f6bee6cbafa6dc8ea0": {
+      "token": "ses_317be4864e1946f6bee6cbafa6dc8ea0",
+      "playerId": "plr_dc2316bc",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792447220004,
+      "disconnectedAt": null
+    },
+    "ses_e847b24bd57049cda3c0b56186f2b3fe": {
+      "token": "ses_e847b24bd57049cda3c0b56186f2b3fe",
+      "playerId": "plr_ec3acb55",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792495772011,
+      "disconnectedAt": null
+    },
+    "ses_9a47e6662c8446adbfb8ffd199f106f7": {
+      "token": "ses_9a47e6662c8446adbfb8ffd199f106f7",
+      "playerId": "plr_3cab1a83",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792503652572,
+      "disconnectedAt": null
+    },
+    "ses_fae4d2a415fa458cb4dae1edf57a7dda": {
+      "token": "ses_fae4d2a415fa458cb4dae1edf57a7dda",
+      "playerId": "plr_9cf7c0a0",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792505174451,
+      "disconnectedAt": null
+    },
+    "ses_c9196077125f465facda60a1480da270": {
+      "token": "ses_c9196077125f465facda60a1480da270",
+      "playerId": "plr_2232cb9d",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792509710546,
+      "disconnectedAt": null
+    },
+    "ses_f9ad9f0e0f7c4b12a139429bf18f8e85": {
+      "token": "ses_f9ad9f0e0f7c4b12a139429bf18f8e85",
+      "playerId": "plr_ad9297a1",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792512479973,
+      "disconnectedAt": null
+    },
+    "ses_8a124776f921455e9182b71fbac1f59c": {
+      "token": "ses_8a124776f921455e9182b71fbac1f59c",
+      "playerId": "plr_099fa24a",
+      "playerName": "Шеф 2",
+      "avatar": "👩‍🍳",
+      "roomId": "multi_room",
+      "score": 0,
+      "roundScore": 0,
+      "roundPairs": 0,
+      "comboStreak": 0,
+      "roundDiscoveredRecipes": [],
+      "isOnline": true,
+      "lastActive": 1792516363900,
+      "disconnectedAt": null
+    },
+    "ses_d5d3aa93ed944d7b994866deda116d14": {
+      "token": "ses_d5d3aa93ed944d7b994866deda116d14",
+      "playerId": "plr_6589f0b6",
+      "playerName": "Супер-Шеф",
+      "avatar": "🍕",
+      "roomId": "multi_room",
+      "score": 100,
+      "roundScore": 100,
+      "roundPairs": 1,
+      "comboStreak": 1,
+      "roundDiscoveredRecipes": [
+        {
+          "pairId": "pair_coffee_donut",
+          "pairTitle": "Кофе + Пончик",
+          "cardA": {
+            "name": "Кофе",
+            "emoji": "☕"
+          },
+          "cardB": {
+            "name": "Пончик",
+            "emoji": "🍩"
+          },
+          "discoveredAt": "2026-10-20T20:15:48.986Z"
+        }
+      ],
+      "isOnline": false,
+      "lastActive": 1792527348989,
+      "disconnectedAt": 1792527348989
+    },
+    "ses_67a1fb70a01843b7a45cb12886e30836": {
+      "token": "ses_67a1fb70a01843b7a45cb12886e30836",
+      "playerId": "plr_72566909",
+      "playerName": "ТестШеф1",
+      "avatar": "🍕",
+      "roomId": "test_scores_room",
+      "score": 100,
+      "roundScore": 100,
+      "roundPairs": 1,
+      "comboStreak": 1,
+      "roundDiscoveredRecipes": [
+        {
+          "pairId": "pair_pancakes_honey",
+          "pairTitle": "Блины + Мед",
+          "cardA": {
+            "name": "Мед",
+            "emoji": "🍯"
+          },
+          "cardB": {
+            "name": "Блинчики",
+            "emoji": "🥞"
+          },
+          "discoveredAt": "2026-10-22T15:24:01.130Z"
+        }
+      ],
+      "isOnline": false,
+      "lastActive": 1792682641135,
+      "disconnectedAt": 1792682641135
+    }
+  },
+  "authTokens": {}
+}

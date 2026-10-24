@@ -3,453 +3,396 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SnapSafari — Многопользовательская веб-игра (СПП ЛР4)</title>
+  <title>Food Duo — Найди Пару: Еда</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
 </head>
 <body>
-  <!-- Header Bar -->
+  <!-- Header -->
   <header class="app-header">
-    <div class="logo-area">
-      <div class="logo-icon">📸</div>
-      <div class="logo-text">
-        <h1>SnapSafari</h1>
-        <span class="sub-text">Фото-Охота в Реальном Времени</span>
-      </div>
+    <div class="logo">
+      <span class="logo-emoji">🍴</span>
+      <span class="logo-title">Food Duo</span>
+      <span class="logo-tag">Найди пару еде</span>
     </div>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs">
-      <button class="tab-btn active" data-tab="safari">🎯 Сафари Охота</button>
-      <button class="tab-btn" data-tab="gallery">🖼️ Фото-Выставка <span class="badge" id="galleryCountBadge">0</span></button>
-      <button class="tab-btn" data-tab="leaderboard">🏆 Зал Славы</button>
-      <button class="tab-btn highlight" data-tab="demo">🧪 Проверка Требований ЛР4</button>
-    </nav>
-
-    <!-- Status & Profile -->
-    <div class="header-status">
-      <!-- Network indicator -->
-      <div id="netStatusPill" class="status-pill status-connecting" title="Статус WebSocket">
+    <div class="header-right">
+      <div id="netStatusPill" class="status-pill status-connected" title="Статус сети">
         <span class="status-dot"></span>
-        <span id="netStatusText">Подключение...</span>
+        <span id="netStatusText">В сети</span>
       </div>
 
-      <!-- Sound Toggle -->
-      <button id="soundToggleBtn" class="icon-btn" title="Звуковые эффекты">🔊</button>
+      <button id="soundToggleBtn" class="icon-btn" title="Звук">🔊</button>
 
-      <!-- Player Profile Card -->
-      <div class="player-profile-pill" id="playerProfilePill">
-        <span class="player-avatar" id="headerPlayerAvatar">📸</span>
-        <span class="player-name" id="headerPlayerName">Игрок</span>
-        <span class="player-score-badge" id="headerPlayerScore">0</span>
+      <div id="headerPlayerPill" class="player-pill" title="Профиль игрока" style="cursor: pointer;">
+        <span id="headerPlayerAvatar">👨‍🍳</span>
+        <span id="headerPlayerName">Шеф-Повар</span>
+        <span id="headerPlayerScore" class="score-badge">0</span>
       </div>
+
+      <button id="authBtn" class="btn btn-sm btn-outline auth-btn" title="Войти или зарегистрироваться">
+        <span id="authBtnIcon">🔑</span> <span id="authBtnText">Войти</span>
+      </button>
     </div>
   </header>
 
-  <!-- Network Offline Alert Banner -->
+  <!-- Offline Banner -->
   <div id="offlineBanner" class="offline-banner hidden">
-    <span class="offline-icon">⚠️</span>
-    <span id="offlineBannerMsg">Соединение потеряно! Состояние сохранено локально. Повторное подключение...</span>
-    <span class="queue-badge" id="offlineQueueBadge">Очередь: 0</span>
-    <button id="reconnectNowBtn" class="btn btn-sm btn-reconnect">Переподключить сейчас</button>
+    <span>⚠️ Связь потеряна. Сохранено локально.</span>
+    <span id="offlineQueueBadge" class="queue-tag">Очередь: 0</span>
+    <button id="reconnectNowBtn" class="btn btn-sm btn-white">Подключить</button>
   </div>
 
-  <!-- Main Views Container -->
-  <main class="main-content">
+  <!-- Realtime Conflict Toast Notification -->
+  <div id="conflictAlertBanner" class="conflict-toast hidden">
+    <span class="toast-icon">⚡</span>
+    <div class="toast-body">
+      <div id="conflictTitle" class="toast-title">Разрешен конфликт версий</div>
+      <div id="conflictDesc" class="toast-desc">Сервер объединил изменения.</div>
+    </div>
+    <button id="closeConflictBannerBtn" class="toast-close">×</button>
+  </div>
 
-    <!-- VIEW 1: SAFARI CANVAS GAME -->
-    <section id="view-safari" class="game-view active">
-      <!-- Round Info & Target HUD -->
-      <div class="target-hud-bar">
-        <div class="hud-target-info">
-          <div class="target-badge-label">ТЕКУЩАЯ ЦЕЛЬ РАУНДА:</div>
-          <div class="target-name-container">
-            <span class="target-icon" id="targetSpeciesIcon">🎯</span>
-            <span class="target-name" id="targetNameText">Поиск цели...</span>
-            <span class="target-rarity-badge" id="targetRarityBadge">Редкий</span>
-          </div>
-          <div class="target-hint" id="targetHintText">Ищите в подходящей зоне заповедника!</div>
+  <!-- Main Game Container -->
+  <main class="main-container">
+
+    <!-- Game Card Section (Focus of the App) -->
+    <section class="game-section">
+      <!-- Simple Top Stats Bar -->
+      <div class="simple-hud">
+        <div class="hud-item">
+          <span class="hud-label">Очки в игре</span>
+          <span id="hudScoreVal" class="hud-value accent">0</span>
         </div>
 
-        <div class="hud-timer-container">
-          <div class="timer-label">ВРЕМЯ ДО СМЕНЫ</div>
-          <div class="timer-value" id="roundTimerVal">35s</div>
-          <div class="timer-bar-wrap">
-            <div class="timer-bar-fill" id="roundTimerBar"></div>
-          </div>
+        <div class="hud-item">
+          <span class="hud-label">Найдено</span>
+          <span id="remainingPairsVal" class="hud-value">0 / 8 пар</span>
         </div>
 
-        <div class="hud-round-meta">
-          <div class="round-num-label">РАУНД #<span id="roundNumberVal">1</span></div>
-          <div class="active-hunters-label">Охотников в сети: <span id="onlineHuntersCount">1</span></div>
+        <div class="hud-item">
+          <span class="hud-label">Время</span>
+          <span id="roundTimerVal" class="hud-value">00:00</span>
+        </div>
+
+        <div class="hud-item">
+          <span class="hud-label">Игроков</span>
+          <span id="onlinePlayersCount" class="hud-value">1 онлайн</span>
+        </div>
+
+        <div id="comboStreakBadge" class="combo-pill hidden">🔥 x2</div>
+
+        <button id="pauseToggleBtn" class="btn btn-sm btn-outline" title="Приостановить или продолжить игру">
+          ⏸️ Пауза
+        </button>
+
+        <button id="newRoundBtn" class="btn btn-sm btn-outline" title="Перемешать стол">
+          🔄 Заново
+        </button>
+      </div>
+
+      <!-- Active Players in Room List -->
+      <div class="room-players-bar" id="roomPlayersBar">
+        <span class="room-players-title">👥 Игроки за столом:</span>
+        <div class="room-players-chips" id="roomPlayersChips">
+          <!-- Populated by JS -->
         </div>
       </div>
 
-      <!-- Interactive Viewport Container -->
-      <div class="viewport-wrapper" id="viewportWrapper">
-        <canvas id="gameCanvas" width="1200" height="650"></canvas>
-
-        <!-- Viewfinder Overlay Elements -->
-        <div class="viewfinder-hud" id="viewfinderHud">
-          <div class="viewfinder-circle">
-            <div class="viewfinder-cross-h"></div>
-            <div class="viewfinder-cross-v"></div>
-            <div class="viewfinder-corner top-left"></div>
-            <div class="viewfinder-corner top-right"></div>
-            <div class="viewfinder-corner bottom-left"></div>
-            <div class="viewfinder-corner bottom-right"></div>
-            <div class="focus-reticle" id="focusReticle"></div>
-          </div>
-          <div class="hud-readout">
-            <span id="viewfinderCoords">X: 1200 Y: 800</span>
-            <span id="viewfinderZoom">ZOOM 1.0x</span>
-            <span id="viewfinderFocus">FOCUS 85%</span>
-          </div>
+      <!-- 4x4 Card Grid -->
+      <div class="board-wrapper" id="tableWrapper">
+        <div class="cards-grid" id="cardsGridContainer">
+          <!-- 16 Non-repeating cards generated by JS -->
         </div>
 
-        <!-- Camera Flash Animation Overlay -->
-        <div id="flashOverlay" class="flash-overlay"></div>
-
-        <!-- Target In-Sight Indicator Alert -->
-        <div id="targetInSightAlert" class="target-in-sight-alert hidden">
-          🎯 ЦЕЛЬ В ПРИЦЕЛЕ! НАЖМИТЕ ПРОБЕЛ ДЛЯ СНИМКА!
+        <!-- Pause Overlay for network disconnect / player leave -->
+        <div id="gamePauseOverlay" class="game-pause-overlay hidden">
+          <div class="pause-box">
+            <div class="pause-badge">⏸️ ПАУЗА</div>
+            <h3 id="pauseTitle">Игра приостановлена</h3>
+            <p id="pauseReason">Один из шеф-поваров отключился от стола. Ожидаем переподключения...</p>
+            <div class="pause-spinner"></div>
+            <button id="resumeGameBtn" type="button" class="btn btn-sm btn-primary hidden" style="margin-top: 14px; width: 100%;">
+              ▶️ Снять с паузы
+            </button>
+            <button id="abortAndRestartBtn" type="button" class="btn btn-sm btn-primary" style="margin-top: 14px; width: 100%;">
+              🔄 Завершить и начать новую игру
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Bottom Camera Tool Bar -->
-      <div class="camera-toolbar">
-        <div class="tool-group">
-          <label>Приближение (Zoom):</label>
-          <button id="zoomOutBtn" class="tool-btn" title="Уменьшить">-</button>
-          <input type="range" id="zoomSlider" min="0.6" max="2.2" step="0.1" value="1.0">
-          <button id="zoomInBtn" class="tool-btn" title="Увеличить">+</button>
-          <span class="tool-val" id="zoomValDisplay">1.0x</span>
-        </div>
+      <!-- Quick rule hint -->
+      <div class="game-hint">
+        💡 <b>Правило:</b> Открывайте карточки и находите подходящую пару (например: 🍔 Бургер + 🍟 Фри, 🍕 Пицца + 🥤 Кола, ☕ Кофе + 🍩 Пончик). Все 16 карточек разные!
+      </div>
+    </section>
 
-        <!-- Big Shutter Button -->
-        <div class="tool-group main-shutter-group">
-          <button id="shutterBtn" class="shutter-button">
-            <div class="shutter-inner">
-              <span class="shutter-icon">📸</span>
-              <span class="shutter-title">СДЕЛАТЬ СНИМОК</span>
-              <span class="shutter-sub">(ПРОБЕЛ / КЛИК)</span>
-            </div>
+    <!-- Minimalist Collapsible Panels -->
+    <section class="extra-sections">
+      <div class="tab-buttons">
+        <button class="panel-tab-btn active" data-panel="recipes">🏆 Открытые мной рецепты (<span id="recipeCountBadge">0</span>)</button>
+        <button class="panel-tab-btn" data-panel="leaderboard">🥇 Лидеры</button>
+      </div>
+
+      <!-- Panel 1: Unlocked Recipes in Current Game -->
+      <div id="panel-recipes" class="panel-content active">
+        <div class="panel-subtitle" style="margin-bottom: 12px; color: var(--text-muted); font-size: 13px;">
+          Рецепты (пары еды), которые вы открыли в текущей игре:
+        </div>
+        <div class="recipe-cards-grid" id="recipeCardsGrid"></div>
+      </div>
+
+      <!-- Panel 2: Leaderboard (Current Game & All Games) -->
+      <div id="panel-leaderboard" class="panel-content">
+        <div class="leaderboard-tabs">
+          <button type="button" id="tabLeaderboardCurrent" class="leaderboard-tab-btn active">
+            🎮 Текущая игра
+          </button>
+          <button type="button" id="tabLeaderboardAll" class="leaderboard-tab-btn">
+            🏆 Все игры (Общий)
           </button>
         </div>
 
-        <div class="tool-group">
-          <label>Кольцо фокуса:</label>
-          <input type="range" id="focusSlider" min="10" max="90" step="5" value="50">
-          <span class="tool-val" id="focusValDisplay">Авто</span>
-        </div>
-
-        <div class="controls-hint">
-          <span>💡 <b>Управление:</b> Двигайте мышь для наведения камеры, колесико для зума, <b>Пробел</b> для снимка</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 2: COLLABORATIVE EXHIBITION BOARD (Concurrent Editing & Conflicts) -->
-    <section id="view-gallery" class="game-view">
-      <div class="gallery-header-bar">
-        <div>
-          <h2>🖼️ Совместная Выставка Трофеев</h2>
-          <p class="subtitle">
-            Все игроки могут одновременно редактировать карточки снимков (подпись, фильтр, стикер, расположение).
-            Сервер проверяет версии (OCC) и бесконфликтно объединяет изменения (3-Way Merge).
-          </p>
-        </div>
-        <div class="gallery-action-buttons">
-          <button id="demoTriggerConflictBtn" class="btn btn-warning">
-            ⚡ Смоделировать конфликт одновременного редактирования
-          </button>
-          <button id="refreshGalleryBtn" class="btn btn-secondary">🔄 Обновить</button>
-        </div>
-      </div>
-
-      <!-- Realtime Conflict Toast Notification Area -->
-      <div id="conflictAlertBanner" class="conflict-alert-banner hidden">
-        <div class="conflict-banner-content">
-          <span class="conflict-icon">⚡</span>
-          <div class="conflict-text-wrap">
-            <div class="conflict-title" id="conflictTitle">Разрешен конфликт версий!</div>
-            <div class="conflict-desc" id="conflictDesc">Сервер автоматически объединил правки.</div>
+        <!-- Current Game Leaderboard -->
+        <div id="leaderboardCurrentView" class="leaderboard-view">
+          <div class="panel-subtitle" style="margin-bottom: 10px; color: var(--text-muted); font-size: 13px;">
+            Рейтинг шеф-поваров в текущем раунде (очки за эту игру):
           </div>
-        </div>
-        <button id="closeConflictBannerBtn" class="icon-btn-close">×</button>
-      </div>
-
-      <!-- Cards Grid / Board -->
-      <div class="corkboard-container" id="corkboardContainer">
-        <div class="cards-grid" id="galleryCardsGrid">
-          <!-- Dynamically populated photo cards -->
-        </div>
-      </div>
-    </section>
-
-    <!-- VIEW 3: HALL OF FAME / PERSISTENT LEADERBOARD -->
-    <section id="view-leaderboard" class="game-view">
-      <div class="leaderboard-header">
-        <h2>🏆 Зал Славы Фото-Охотников</h2>
-        <p class="subtitle">
-          Данные статистики сохраняются между запусками приложения в <code>data/database.json</code>.
-        </p>
-      </div>
-
-      <div class="leaderboard-table-wrap">
-        <table class="leaderboard-table">
-          <thead>
-            <tr>
-              <th>Место</th>
-              <th>Охотник</th>
-              <th>Всего очков</th>
-              <th>Успешных снимков</th>
-              <th>Ср. Точность</th>
-              <th>Лучшее время</th>
-              <th>Был в сети</th>
-            </tr>
-          </thead>
-          <tbody id="leaderboardTbody">
-            <!-- Populated dynamically -->
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- VIEW 4: PROFESSOR LAB 4 VERIFICATION PANEL -->
-    <section id="view-demo" class="game-view">
-      <div class="demo-header">
-        <h2>🧪 Панель Проверки Требований Лабораторной Работы №4</h2>
-        <p class="subtitle">
-          Наглядный отчет и интерактивные тесты соответствия каждому пункту задания.
-        </p>
-      </div>
-
-      <div class="requirements-grid">
-        <!-- Req 1: WebSockets -->
-        <div class="req-card passed">
-          <div class="req-status-badge">✅ Выполнено</div>
-          <h3>1. Мгновенная синхронизация через WebSockets</h3>
-          <p>
-            Позиции камеры участников, перемещение диких животных (20 Гц), смена раундов,
-            снимки и вспышки передаются всем подключенным клиентам в режиме реального времени.
-          </p>
-          <div class="req-meta">
-            <span>Протокол: <b>Native WebSocket (ws)</b></span>
-            <span>Частота синхронизации: <b>20 fps</b></span>
-          </div>
-        </div>
-
-        <!-- Req 2: Pure JavaScript -->
-        <div class="req-card passed">
-          <div class="req-status-badge">✅ Выполнено</div>
-          <h3>2. Только JavaScript, без фреймворков</h3>
-          <p>
-            Frontend написан на чистом Vanilla JavaScript (ES6+ модули, Canvas API, Web Audio API).
-            Backend — чистый Node.js без Express, React, Vue, Angular или Next.js.
-          </p>
-          <div class="req-meta">
-            <span>Frontend: <b>Vanilla JS + Canvas</b></span>
-            <span>Backend: <b>Node.js (http + ws)</b></span>
-          </div>
-        </div>
-
-        <!-- Req 3: Persistence -->
-        <div class="req-card passed">
-          <div class="req-status-badge">✅ Выполнено</div>
-          <h3>3. Сохранение данных между запусками</h3>
-          <p>
-            Все профили игроков, рекорды, фотоальбом и история матчей сохраняются в
-            файле <code>data/database.json</code> с атомарной перезаписью (atomic write).
-            Данные сохраняются при перезапуске сервера.
-          </p>
-          <div class="req-actions">
-            <button id="viewDbJsonBtn" class="btn btn-sm btn-secondary">Показать структуру БД</button>
-            <button id="resetDemoDbBtn" class="btn btn-sm btn-danger">Сбросить до демо-данных</button>
-          </div>
-        </div>
-
-        <!-- Bonus 1: Conflict Resolution -->
-        <div class="req-card bonus-passed">
-          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
-          <h3>4. Конкурентный доступ и разрешение конфликтов</h3>
-          <p>
-            Реализовано два уровня разрешения конфликтов:
-            <br><b>А) Конкурентный снимок цели:</b> При одновременном нажатии кнопки съемки арбитр с микросекундной точностью
-            (<code>process.hrtime.bigint</code>) и учетом точности центрирования определяет победителя (Золото) и ассистента (Серебро).
-            <br><b>Б) Совместное редактирование карточек:</b> При одновременной правке карточки несколькими пользователями сервер применяет
-            оптимистическую блокировку (OCC по версии <code>version</code>) и 3-Way Field Merge, объединяя непересекающиеся поля без потери данных.
-          </p>
-          <div class="req-actions">
-            <button id="testConflictBtn2" class="btn btn-sm btn-warning">🧪 Запустить тест одновременного редактирования</button>
-          </div>
-        </div>
-
-        <!-- Bonus 2: Offline Resilience -->
-        <div class="req-card bonus-passed">
-          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
-          <h3>5. Восстановление при потере соединения</h3>
-          <p>
-            При отключении сети клиент сохраняет состояние в <code>localStorage</code>, буферизирует
-            действия в очередь (Offline Action Queue) и периодически пытается переподключиться.
-            Сервер удерживает сессию в течение grace-периода и восстанавливает игрока без потери очков.
-          </p>
-          <div class="req-actions">
-            <button id="simulateDropSocketBtn" class="btn btn-sm btn-danger">🔌 Имитировать обрыв сети (Drop Connection)</button>
-          </div>
-        </div>
-
-        <!-- Bonus 3: Deployment Ready -->
-        <div class="req-card bonus-passed">
-          <div class="req-status-badge bonus">⭐ 8-10: Выполнено</div>
-          <h3>6. Готовность к развертыванию на хостинге</h3>
-          <p>
-            Приложение полностью автономно, слушает <code>process.env.PORT</code>, снабжено <code>Dockerfile</code>
-            и конфигурацией <code>render.yaml</code> для развертывания на Render, Glitch или Railway в 1 клик.
-          </p>
-        </div>
-      </div>
-
-      <!-- Conflict Audit Log -->
-      <div class="audit-log-section">
-        <h3>📋 Журнал Разрешения Конфликтов (Live Audit Log)</h3>
-        <p class="subtitle">Все зафиксированные конфликты конкурентного доступа и результаты их арбитража:</p>
-        <div class="audit-table-wrap">
-          <table class="audit-table">
+          <table class="simple-table">
             <thead>
               <tr>
-                <th>Время</th>
-                <th>Тип</th>
-                <th>Цель / Карточка</th>
-                <th>Участники</th>
-                <th>Способ разрешения</th>
-                <th>Итог</th>
+                <th style="width: 50px;">Место</th>
+                <th>Игрок</th>
+                <th>Очки в игре</th>
+                <th>Пар</th>
+                <th>Комбо</th>
+                <th>Статус</th>
               </tr>
             </thead>
-            <tbody id="conflictAuditTbody">
-              <!-- Populated dynamically -->
-            </tbody>
+            <tbody id="leaderboardCurrentTbody"></tbody>
           </table>
         </div>
+
+        <!-- All Games Leaderboard -->
+        <div id="leaderboardAllView" class="leaderboard-view hidden">
+          <div class="panel-subtitle" style="margin-bottom: 10px; color: var(--text-muted); font-size: 13px;">
+            Общий рейтинг за все сыгранные игры (накопительный счёт):
+          </div>
+          <table class="simple-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Место</th>
+                <th>Игрок</th>
+                <th>Всего очков</th>
+                <th>Всего пар</th>
+                <th>Сыграно игр</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTbody"></tbody>
+          </table>
+        </div>
+
+
       </div>
     </section>
 
   </main>
 
-  <!-- MODAL 1: Login / Profile Setup -->
-  <div id="loginModal" class="modal-backdrop">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-icon">📸</span>
-        <h2>Добро пожаловать в SnapSafari!</h2>
-        <p>Многопользовательская веб-игра в реальном времени</p>
+  <!-- Auth Modal (Login & Registration) -->
+  <div id="authModal" class="modal-backdrop hidden">
+    <div class="modal-box auth-box">
+      <div class="modal-top">
+        <h3 id="authModalTitle">Вход в Food Duo</h3>
+        <button id="closeAuthModalBtn" class="toast-close hidden" title="Закрыть">×</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 12px;">
+        Для игры обязателен аккаунт: ваш счет, открытые рецепты и прогресс сохраняются на сервере между перезапусками.
+      </p>
+
+      <!-- Auth Tabs: Login vs Register -->
+      <div class="auth-tabs">
+        <button type="button" id="tabAuthLogin" class="auth-tab-btn active">🔑 Вход</button>
+        <button type="button" id="tabAuthRegister" class="auth-tab-btn">📝 Регистрация</button>
       </div>
 
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="playerNameInput">Ваш псевдоним фотографа:</label>
-          <input type="text" id="playerNameInput" maxlength="18" placeholder="Введите имя..." autofocus>
+      <!-- Error Alert -->
+      <div id="authErrorAlert" class="auth-error-banner hidden"></div>
+
+      <!-- Login Form -->
+      <form id="authLoginForm" class="modal-form">
+        <label for="loginUsername">Логин шеф-повара:</label>
+        <input type="text" id="loginUsername" maxlength="20" placeholder="Ваш логин" required autocomplete="username">
+
+        <label for="loginPassword">Пароль:</label>
+        <input type="password" id="loginPassword" placeholder="Введите пароль" required autocomplete="current-password">
+
+        <div class="modal-buttons" style="margin-top: 14px;">
+          <button type="submit" id="submitLoginBtn" class="btn btn-primary btn-block">Войти в игру</button>
+        </div>
+      </form>
+
+      <!-- Registration Form -->
+      <form id="authRegisterForm" class="modal-form hidden">
+        <label for="registerUsername">Логин (2-20 символов):</label>
+        <input type="text" id="registerUsername" maxlength="20" placeholder="Придумайте логин" required autocomplete="username">
+
+        <label for="registerPassword">Пароль (от 4 символов):</label>
+        <input type="password" id="registerPassword" placeholder="Придумайте пароль" required autocomplete="new-password">
+
+        <label>Выберите аватар:</label>
+        <div class="avatar-select" id="registerAvatarPicker">
+          <button type="button" class="av-opt active" data-avatar="/avatars/chef_male.svg" title="Шеф">
+            <img src="/avatars/chef_male.svg" alt="Шеф" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/chef_female.svg" title="Шеф-девушка">
+            <img src="/avatars/chef_female.svg" alt="Шеф-девушка" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/pizza.svg" title="Пицца">
+            <img src="/avatars/pizza.svg" alt="Пицца" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/burger.svg" title="Бургер">
+            <img src="/avatars/burger.svg" alt="Бургер" class="av-opt-img">
+          </button>
         </div>
 
-        <div class="form-group">
-          <label>Выберите аватар камеры:</label>
-          <div class="avatar-picker" id="avatarPicker">
-            <button type="button" class="avatar-opt active" data-avatar="📸">📸</button>
-            <button type="button" class="avatar-opt" data-avatar="📷">📷</button>
-            <button type="button" class="avatar-opt" data-avatar="🦊">🦊</button>
-            <button type="button" class="avatar-opt" data-avatar="🦁">🦁</button>
-            <button type="button" class="avatar-opt" data-avatar="🐧">🐧</button>
-            <button type="button" class="avatar-opt" data-avatar="🦉">🦉</button>
-            <button type="button" class="avatar-opt" data-avatar="🚀">🚀</button>
-            <button type="button" class="avatar-opt" data-avatar="⭐">⭐</button>
-          </div>
+        <div class="modal-buttons" style="margin-top: 14px;">
+          <button type="submit" id="submitRegisterBtn" class="btn btn-primary btn-block">Зарегистрироваться и играть</button>
         </div>
+      </form>
+    </div>
+  </div>
 
-        <div class="form-group">
-          <label for="roomSelectInput">Заповедник (Комната):</label>
-          <select id="roomSelectInput">
-            <option value="safari_main">🌍 Главный Заповедник Саванны (Общий)</option>
-            <option value="jungle_oasis">🌴 Тропический Оазис</option>
-            <option value="cyber_park">⚡ Кибер-Парк Неона</option>
-          </select>
+  <!-- Profile Modal with Stats, OK & Cancel, and Delete Account -->
+  <div id="profileModal" class="modal-backdrop hidden">
+    <div class="modal-box profile-modal-box">
+      <div class="modal-top">
+        <h3 id="profileModalTitle">Профиль шеф-повара</h3>
+        <button id="closeProfileModalBtn" class="toast-close" title="Закрыть">×</button>
+      </div>
+
+      <!-- Current User Overview -->
+      <div class="profile-header-card">
+        <div class="profile-avatar-large" id="profileAvatarBig">👨‍🍳</div>
+        <div class="profile-user-details">
+          <div class="profile-user-name" id="profileUsername">Шеф-Повар</div>
+          <div class="profile-user-badge" id="profileUserBadge">Статус: В сети</div>
         </div>
       </div>
 
-      <div class="modal-footer">
-        <button id="startGameBtn" class="btn btn-primary btn-block">Войти на Фото-Охоту 🎯</button>
+      <!-- User Stats Grid: Total score across all games, games played, current game score, total pairs -->
+      <div class="profile-stats-grid">
+        <div class="profile-stat-card highlight">
+          <div class="profile-stat-icon">⭐</div>
+          <div class="profile-stat-number" id="profileTotalScore">0</div>
+          <div class="profile-stat-label">Всего очков за все игры</div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🎮</div>
+          <div class="profile-stat-number" id="profileGamesPlayed">0</div>
+          <div class="profile-stat-label">Сыграно игр</div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🎯</div>
+          <div class="profile-stat-number" id="profileCurrentGameScore">0</div>
+          <div class="profile-stat-label">Очки в текущей игре</div>
+        </div>
+
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🍽️</div>
+          <div class="profile-stat-number" id="profileTotalPairs">0</div>
+          <div class="profile-stat-label">Всего найдено пар</div>
+        </div>
+      </div>
+
+      <!-- Edit avatar -->
+      <div class="modal-form" style="margin-top: 14px;">
+        <label for="playerNameInput">Логин игрока (не изменяется):</label>
+        <input type="text" id="playerNameInput" maxlength="16" placeholder="Шеф-Повар" value="Шеф-Повар" readonly disabled style="opacity: 0.7; cursor: not-allowed; background: rgba(255, 255, 255, 0.04);">
+
+        <label>Выберите аватар:</label>
+        <div class="avatar-select" id="avatarPicker">
+          <button type="button" class="av-opt active" data-avatar="/avatars/chef_male.svg" title="Шеф">
+            <img src="/avatars/chef_male.svg" alt="Шеф" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/chef_female.svg" title="Шеф-девушка">
+            <img src="/avatars/chef_female.svg" alt="Шеф-девушка" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/pizza.svg" title="Пицца">
+            <img src="/avatars/pizza.svg" alt="Пицца" class="av-opt-img">
+          </button>
+          <button type="button" class="av-opt" data-avatar="/avatars/burger.svg" title="Бургер">
+            <img src="/avatars/burger.svg" alt="Бургер" class="av-opt-img">
+          </button>
+        </div>
+
+        <div class="modal-buttons">
+          <button id="cancelProfileBtn" class="btn btn-secondary">Отмена</button>
+          <button id="saveProfileBtn" class="btn btn-primary">ОК</button>
+        </div>
+      </div>
+
+      <!-- Danger Zone / Delete Account -->
+      <div class="profile-danger-zone">
+        <div class="danger-zone-title">Управление аккаунтом</div>
+        <button id="deleteAccountBtn" type="button" class="btn btn-danger btn-block" title="Удалить аккаунт и все данные">
+          🗑️ Удалить аккаунт
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: Round Showcase / Victory Overlay -->
-  <div id="showcaseModal" class="showcase-backdrop hidden">
-    <div class="showcase-card">
-      <div class="showcase-ribbon">🏆 СНИМОК РАУНДА!</div>
-      <div class="showcase-photo-frame" id="showcasePhotoFrame">
-        <!-- Rendered winner creature / card -->
-        <canvas id="showcaseCanvas" width="340" height="240"></canvas>
+  <!-- Round Finished Modal -->
+  <div id="showcaseModal" class="modal-backdrop hidden">
+    <div class="modal-box victory-box">
+      <div class="victory-ribbon">🎉 ВСЕ ПАРЫ НАЙДЕНЫ!</div>
+      <div class="modal-emoji" id="showcaseWinnerAvatar">👨‍🍳</div>
+      <h3 id="showcaseWinnerName">Шеф-Повар</h3>
+      <p id="showcaseMessage">Отличная память и реакция!</p>
+      <div class="victory-stats">
+        <span>Очки: <b id="showcaseScore">+800</b></span>
+        <span>Пар: <b id="showcasePairs">8</b></span>
       </div>
-      <div class="showcase-details">
-        <h3 id="showcaseTargetTitle">Кибер-Пингвин</h3>
-        <p class="showcase-photographer">Фотограф: <b id="showcaseWinnerName">Player</b></p>
-        <div class="showcase-metrics">
-          <span class="metric-pill">Точность: <b id="showcaseAccuracy">95%</b></span>
-          <span class="metric-pill">Очки: <b id="showcaseScore">+1250</b></span>
-          <span class="metric-pill">Время: <b id="showcaseTime">1.8s</b></span>
+      <div class="victory-restart-wrap">
+        <button id="showcaseRestartBtn" class="btn btn-primary btn-block">
+          🔄 Играть заново
+        </button>
+        <button id="showcaseOkBtn" class="btn btn-secondary btn-block" style="margin-top: 8px;">
+          👀 ОК, посмотреть поле
+        </button>
+        <div id="showcaseRestartStatus" class="ready-status-text">
+          Нажмите кнопку, чтобы начать новый раунд
         </div>
-        <div id="showcaseContentionBox" class="showcase-contention-box hidden">
-          ⚡ <b>Конкурентный снимок:</b> Соперник отстал всего на <span id="showcaseDeltaMs">42</span> мс!
-        </div>
-      </div>
-      <div class="showcase-countdown">Следующий раунд начнется через <span id="showcaseSec">4</span>...</div>
-    </div>
-  </div>
-
-  <!-- MODAL 3: Edit Card Modal -->
-  <div id="editCardModal" class="modal-backdrop hidden">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Редактирование Карточки Выставки</h2>
-        <span class="version-tag" id="editModalVersionTag">Версия 1</span>
-      </div>
-
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="editCaptionInput">Подпись к фотографии:</label>
-          <input type="text" id="editCaptionInput" maxlength="60" placeholder="Добавьте остроумную подпись...">
-        </div>
-
-        <div class="form-group">
-          <label>Художественный фильтр:</label>
-          <div class="filter-picker" id="editFilterPicker">
-            <button type="button" class="filter-opt active" data-filter="normal">Обычный</button>
-            <button type="button" class="filter-opt" data-filter="vintage">Винтаж</button>
-            <button type="button" class="filter-opt" data-filter="cyberpunk">Киберпанк</button>
-            <button type="button" class="filter-opt" data-filter="noir">Нуар</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Памятный стикер:</label>
-          <div class="sticker-picker" id="editStickerPicker">
-            <button type="button" class="sticker-opt active" data-sticker="⭐">⭐</button>
-            <button type="button" class="sticker-opt" data-sticker="🏆">🏆</button>
-            <button type="button" class="sticker-opt" data-sticker="📸">📸</button>
-            <button type="button" class="sticker-opt" data-sticker="🔥">🔥</button>
-            <button type="button" class="sticker-opt" data-sticker="🚀">🚀</button>
-            <button type="button" class="sticker-opt" data-sticker="🦊">🦊</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button id="cancelEditCardBtn" class="btn btn-secondary">Отмена</button>
-        <button id="saveEditCardBtn" class="btn btn-primary">Сохранить (OCC Sync)</button>
       </div>
     </div>
   </div>
 
-  <!-- Scripts: Vanilla JavaScript Modules -->
+  <!-- Interactive Restart Confirmation Modal for other players -->
+  <div id="restartConfirmModal" class="modal-backdrop hidden" style="z-index: 1050;">
+    <div class="modal-box restart-confirm-box">
+      <div class="modal-emoji">🔄</div>
+      <h3>Предложение начать заново</h3>
+      <p id="restartConfirmMessage">Шеф-повар предлагает начать новую игру. Вы готовы?</p>
+      <div id="restartConfirmVotesStatus" class="ready-status-text" style="margin-bottom: 16px;">
+        Готовы: 1 из 2 участников
+      </div>
+      <div class="modal-actions" style="display: flex; gap: 10px; justify-content: center;">
+        <button id="restartConfirmAcceptBtn" type="button" class="btn btn-primary" style="flex: 1;">
+          ✅ Да, начать заново!
+        </button>
+        <button id="restartConfirmDeclineBtn" type="button" class="btn btn-secondary" style="flex: 1;">
+          👀 Смотрю поле
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top-level Fullscreen Particle/Celebration Canvas -->
+  <canvas id="effectsCanvas" class="effects-canvas"></canvas>
+
+  <!-- Scripts -->
   <script type="module" src="js/audio.js"></script>
   <script type="module" src="js/network.js"></script>
   <script type="module" src="js/canvas-renderer.js"></script>
