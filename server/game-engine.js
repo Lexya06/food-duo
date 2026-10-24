@@ -59,6 +59,10 @@ export class GameRoom {
   restoreFromState(state) {
     this.roundNumber = state.roundNumber || 1;
     this.roundState = state.roundState || 'IDLE';
+    if (this.roundState === 'SHOWCASE') {
+      this.roundState = 'IDLE';
+      this.lastWinnerInfo = null;
+    }
     this.elapsedSeconds = state.elapsedSeconds || 0;
     this.roundStartedAt = state.roundStartedAt || null;
     this.lastActiveTime = null;

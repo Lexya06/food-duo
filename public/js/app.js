@@ -63,11 +63,11 @@ class AppController {
     if (savedAuthToken) {
       this.joinGame();
     } else {
+      this.player.name = 'Шеф-Повар';
       this.updateHeaderProfile();
+      this.updateAuthUI(null);
       network.connect();
-      setTimeout(() => {
-        this.openAuthModal('login');
-      }, 50);
+      this.openAuthModal('login');
     }
   }
 
@@ -1059,10 +1059,12 @@ class AppController {
       if (payload.authUser) {
         this.updateAuthUI(payload.authUser);
       } else {
-        const storedToken = localStorage.getItem('foodmatch_auth_token');
-        if (!storedToken) {
-          this.openAuthModal('login');
-        }
+        localStorage.removeItem('foodmatch_auth_token');
+        sessionStorage.removeItem('foodmatch_auth_token');
+        this.player.name = 'Шеф-Повар';
+        this.updateAuthUI(null);
+        this.openAuthModal('login');
+        if (this.showcaseModal) this.showcaseModal.classList.add('hidden');
       }
       if (payload.room) {
         if (payload.room.roomId) this.player.roomId = payload.room.roomId;
@@ -1103,6 +1105,13 @@ class AppController {
       }
       if (payload.authUser) {
         this.updateAuthUI(payload.authUser);
+      } else {
+        localStorage.removeItem('foodmatch_auth_token');
+        sessionStorage.removeItem('foodmatch_auth_token');
+        this.player.name = 'Шеф-Повар';
+        this.updateAuthUI(null);
+        this.openAuthModal('login');
+        if (this.showcaseModal) this.showcaseModal.classList.add('hidden');
       }
       if (payload.room) {
         if (payload.room.roomId) this.player.roomId = payload.room.roomId;
@@ -1600,7 +1609,7 @@ class AppController {
 
     if (snapshot.roundState === 'SHOWCASE' && snapshot.lastWinnerInfo) {
       this.currentRoundNumber = snapshot.roundNumber;
-      if (!this.victoryModalDismissedByUser) {
+      if (!this.victoryModalDismissedByUser && this.authUser) {
         if (this.victoryModalShownForRound !== snapshot.roundNumber) {
           this.showRoundVictoryModal(snapshot.lastWinnerInfo);
         } else if (this.showcaseModal && this.showcaseModal.classList.contains('hidden')) {

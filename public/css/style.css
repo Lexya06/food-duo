@@ -271,6 +271,10 @@ body {
   padding: 16px;
 }
 
+#authModal {
+  z-index: 2000;
+}
+
 .modal-backdrop.hidden {
   display: none !important;
 }

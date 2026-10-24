@@ -373,11 +373,13 @@ class PersistenceService {
             bistro.players = bistro.players.filter(p => p && p.name && !isTestPlayerName(p.name) && p.name.toLowerCase() !== 'lexyak');
           }
           const matchedCards = (bistro.cards || []).filter(c => c && c.isMatched).length;
-          if (matchedCards === 0) {
+          if (matchedCards === 0 || matchedCards === 16 || bistro.roundState === 'SHOWCASE') {
             bistro.players = [];
             bistro.roundState = 'IDLE';
             bistro.elapsedSeconds = 0;
             bistro.roundStartedAt = null;
+            bistro.lastWinnerInfo = null;
+            bistro.previousRoundWinner = null;
             bistro.isPaused = false;
             bistro.pauseReason = null;
             bistro.pausedAt = null;
@@ -391,6 +393,7 @@ class PersistenceService {
                 c.matchedByColor = null;
               });
             }
+            this.isDirty = true;
           }
         }
         if (this.isDirty) {
